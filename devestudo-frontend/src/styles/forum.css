@@ -26,11 +26,11 @@
 
 .topic-card--clickable:hover {
   border-color: var(--line-strong);
-  background: #f1f1f1;
+  background: var(--panel-strong);
 }
 
 .topic-card--clickable:focus-visible {
-  outline: 2px solid #777777;
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -59,13 +59,13 @@
   border: 1px solid var(--line-strong);
   border-radius: 4px;
   background: var(--white);
-  color: #222222;
+  color: var(--text);
   font-size: 12px;
   font-weight: 700;
 }
 
 .vote-button:hover {
-  border-color: #999999;
+  border-color: var(--accent-blue);
 }
 
 .vote-button:disabled {
@@ -73,8 +73,10 @@
 }
 
 .vote-button--voted {
-  border-color: var(--black);
-  background: var(--black);
+  border: 0;
+  background: var(--brand-gradient);
+  background-size: 300% auto;
+  background-position: left center;
   color: var(--white);
 }
 
@@ -147,7 +149,7 @@
 
 .topic-detail-content {
   margin-top: 22px;
-  color: #333333;
+  color: var(--text);
   font-size: 16px;
   line-height: 1.6;
 }
@@ -167,7 +169,7 @@
 }
 
 .reply-card p {
-  color: #333333;
+  color: var(--text);
   font-size: 14px;
   line-height: 1.5;
 }

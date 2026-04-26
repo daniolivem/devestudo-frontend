@@ -5,9 +5,27 @@
   padding: 18px;
 }
 
+.mentor-student-card {
+  min-height: 270px;
+  gap: 12px;
+}
+
 .mentor-card h2 {
   font-size: 18px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
+}
+
+.mentor-student-heading,
+.admin-mentor-name-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mentor-student-heading h2,
+.admin-mentor-name-row h3 {
+  margin: 0;
 }
 
 .mentor-copy {
@@ -17,12 +35,12 @@
 }
 
 .mentor-card .chip-list {
-  margin: 18px 0;
+  margin: 8px 0 4px;
 }
 
 .mentor-stats {
   display: grid;
-  gap: 14px;
+  gap: 10px;
   color: var(--muted);
   font-size: 13px;
 }
@@ -54,7 +72,7 @@ button.star {
 }
 
 .star--active {
-  color: var(--black);
+  color: var(--accent-violet);
 }
 
 .mentor-feedback-form {
@@ -69,6 +87,21 @@ button.star {
   margin-top: auto;
 }
 
+.mentor-card-actions {
+  display: grid;
+  grid-template-columns: minmax(132px, 1.3fr) minmax(110px, 1fr) minmax(96px, 0.9fr);
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.mentor-card-actions .btn {
+  width: auto;
+  min-width: 0;
+  min-height: 38px;
+  margin-top: 0;
+}
+
 .mentor-session-summary {
   display: grid;
   gap: 18px;
@@ -76,7 +109,7 @@ button.star {
 }
 
 .mentor-session-summary p {
-  color: #333333;
+  color: var(--text);
   font-size: 14px;
   line-height: 1.5;
 }
@@ -143,9 +176,13 @@ button.star {
 .mentorship-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
-  gap: 16px;
+  gap: 20px;
   align-items: center;
-  padding: 16px 0;
+  padding: 22px 0;
+}
+
+.mentorship-row:first-child {
+  padding-top: 8px;
 }
 
 .mentorship-row > .status-badge {
@@ -159,7 +196,7 @@ button.star {
 
 .mentorship-message {
   margin-top: 8px;
-  color: #333333;
+  color: var(--text);
   font-size: 14px;
   line-height: 1.45;
 }
@@ -169,6 +206,10 @@ button.star {
   flex-wrap: wrap;
   gap: 8px;
   justify-content: flex-end;
+}
+
+.mentorship-actions .btn {
+  min-width: 116px;
 }
 
 .mentors-admin-header {
@@ -190,7 +231,7 @@ button.star {
 .admin-mentors-head,
 .admin-mentor-row {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) 180px 170px 150px;
+  grid-template-columns: minmax(260px, 1fr) 180px 170px 230px;
   gap: 18px;
   align-items: center;
 }
@@ -209,7 +250,6 @@ button.star {
 
 .admin-mentor-row h3 {
   font-size: 16px;
-  margin-bottom: 4px;
 }
 
 .admin-mentor-row .chip-list {
@@ -220,6 +260,14 @@ button.star {
   color: var(--muted);
   font-size: 14px;
   line-height: 1.45;
+}
+
+.admin-mentor-row .mentorship-actions {
+  justify-content: flex-start;
+}
+
+.admin-mentor-row .mentorship-actions .btn {
+  min-width: 68px;
 }
 
 @media (max-width: 900px) {
@@ -253,5 +301,30 @@ button.star {
     content: "Canal:";
     color: var(--muted);
     font-weight: 700;
+  }
+}
+
+@media (max-width: 760px) {
+  .mentor-student-card {
+    min-height: auto;
+    padding: 18px 16px;
+  }
+
+  .mentor-card-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .mentor-card-actions .btn:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .mentor-card-actions .btn {
+    min-width: 0;
+    min-height: 40px;
+  }
+
+  .mentorship-row {
+    padding: 18px 0;
   }
 }

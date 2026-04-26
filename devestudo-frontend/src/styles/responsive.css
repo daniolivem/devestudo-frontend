@@ -8,32 +8,84 @@
     width: 100%;
     height: auto;
     flex-basis: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .sidebar-header {
+    min-height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px;
   }
 
   .brand {
-    padding: 20px;
+    padding: 0;
+    font-size: 18px;
+  }
+
+  .menu-toggle {
+    width: 46px;
+    height: 42px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--white);
+    cursor: pointer;
+  }
+
+  .menu-toggle span {
+    width: 20px;
+    height: 2px;
+    display: block;
+    background: var(--primary);
+    border-radius: 999px;
   }
 
   .sidebar-nav {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    overflow-x: auto;
+    display: none;
+    padding: 0 18px 14px;
+    border-top: 1px solid var(--line);
   }
 
   .nav-link {
-    justify-content: center;
-    min-width: 92px;
-    padding: 0 12px;
-    border-left: 0;
-    border-bottom: 4px solid transparent;
+    min-height: 48px;
+    justify-content: flex-start;
+    padding: 0 14px;
+    border-left: 4px solid transparent;
+    border-bottom: 0;
+    border-radius: 6px;
   }
 
   .nav-link.active {
-    border-bottom-color: var(--black);
+    border-left-color: var(--accent);
   }
 
   .logout-link {
     display: none;
+    margin: 0 18px 16px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--black);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .sidebar--open .sidebar-nav {
+    display: grid;
+    gap: 6px;
+  }
+
+  .sidebar--open .logout-link {
+    display: block;
   }
 
   .page {
@@ -102,7 +154,8 @@
   }
 
   .mentorship-actions .btn {
-    flex: 1 1 130px;
+    min-width: 0;
+    flex: 1 1 120px;
   }
 
   .mentorship-status-panel,

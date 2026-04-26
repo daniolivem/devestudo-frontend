@@ -62,7 +62,7 @@
 
 .admin-link {
   margin-top: 64px;
-  color: #001ee8;
+  color: var(--accent-blue);
   font-size: 12px;
   text-decoration: underline;
 }

@@ -12,8 +12,12 @@
   flex: 0 0 240px;
   display: flex;
   flex-direction: column;
-  background: #f1f1f1;
+  background: var(--panel-strong);
   border-right: 1px solid var(--line);
+}
+
+.sidebar-header {
+  display: block;
 }
 
 .brand {
@@ -21,6 +25,10 @@
   font-size: 18px;
   font-weight: 700;
   line-height: 1.45;
+}
+
+.menu-toggle {
+  display: none;
 }
 
 .sidebar-nav {
@@ -40,8 +48,8 @@
 }
 
 .nav-link.active {
-  border-left-color: var(--black);
-  background: #dedede;
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
   color: var(--black);
   font-weight: 700;
 }

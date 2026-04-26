@@ -43,10 +43,15 @@
 .status-badge {
   padding: 8px 10px;
   border-radius: 4px;
-  background: var(--chip);
-  color: #333333;
+  background: var(--accent-soft);
+  color: var(--primary);
   font-size: 12px;
   font-weight: 700;
+}
+
+.status-badge--blocked {
+  background: #fde8ee;
+  color: #9f2444;
 }
 
 .mentor-home-item {
@@ -130,15 +135,15 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 1px solid #9f9f9f;
-  background: linear-gradient(#d8d8d8, #bdbdbd);
+  border: 1px solid var(--line-strong);
+  background: linear-gradient(135deg, #dffaf6, #dfe9ff);
 }
 
 .role-pill {
   display: inline-flex;
   padding: 2px 6px;
   border-radius: 4px;
-  background: var(--black);
+  background: var(--brand-gradient);
   color: var(--white);
   font-size: 10px;
   font-weight: 700;

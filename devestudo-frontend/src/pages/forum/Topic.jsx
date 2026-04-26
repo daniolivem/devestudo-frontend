@@ -2,70 +2,10 @@ import { useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
-
-const topicDetails = {
-  "como-implementar-autenticacao-jwt-em-node-js": {
-    title: "Como implementar autenticação JWT em Node.js?",
-    author: "Maria Santos",
-    lastInteractionHours: 2,
-    votes: 18,
-    tags: ["Node.js", "JavaScript"],
-    content:
-      "Estou criando uma API em Node.js e quero proteger rotas com JWT. Qual seria uma estrutura simples e segura para gerar o token no login e validar nas rotas privadas?",
-    replies: [
-      {
-        author: "Carlos Mendes",
-        time: "1h atrás",
-        content: "Separe a autenticação em middleware. No login, gere o token com o id do usuário e uma expiração curta.",
-        votes: 8,
-      },
-      {
-        author: "Ana Costa",
-        time: "45min atrás",
-        content: "Também vale guardar o segredo em variável de ambiente e nunca retornar dados sensíveis no payload.",
-        votes: 5,
-      },
-    ],
-  },
-  "diferenca-entre-useeffect-e-uselayouteffect-no-react": {
-    title: "Diferença entre useEffect e useLayoutEffect no React",
-    author: "Pedro Oliveira",
-    lastInteractionHours: 4,
-    votes: 11,
-    tags: ["React", "JavaScript"],
-    content:
-      "Em quais casos faz sentido usar useLayoutEffect no lugar de useEffect? Tenho dúvidas sobre impacto visual e performance.",
-    replies: [
-      {
-        author: "Beatriz Lima",
-        time: "3h atrás",
-        content: "Use useLayoutEffect quando precisa medir ou alterar layout antes do navegador pintar a tela.",
-        votes: 6,
-      },
-    ],
-  },
-};
-
-function fallbackTitleFromSlug(slug) {
-  return slug
-    .split("-")
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
-function formatLastInteraction(hours) {
-  if (hours === 0) {
-    return "agora";
-  }
-
-  if (hours < 24) {
-    return `há ${hours}h`;
-  }
-
-  const days = Math.floor(hours / 24);
-  return `há ${days}d`;
-}
+import ReplyCard from "../../components/forum/ReplyCard";
+import VoteButton from "../../components/forum/VoteButton";
+import { fallbackTitleFromSlug, formatLastInteraction } from "../../utils/forum";
+import { getTopicDetails } from "../../services/forumService";
 
 export default function Topic() {
   const { topicSlug } = useParams();
@@ -88,7 +28,7 @@ export default function Topic() {
     }
 
     return (
-      topicDetails[topicSlug] || {
+      getTopicDetails(topicSlug) || {
         title: fallbackTitleFromSlug(topicSlug || "forum"),
         author: "Comunidade DevEstudo",
         lastInteractionHours: 0,
@@ -192,16 +132,7 @@ export default function Topic() {
           <span>{replies.length} respostas</span>
         </p>
 
-        <button
-          className={currentTopic.hasVoted ? "vote-button vote-button--inline vote-button--voted" : "vote-button vote-button--inline"}
-          type="button"
-          disabled={currentTopic.hasVoted}
-          onClick={upvoteTopic}
-        >
-          ▲
-          <strong>{currentTopic.votes || 0}</strong>
-          {currentTopic.hasVoted ? "votado" : "upvotes"}
-        </button>
+        <VoteButton count={currentTopic.votes || 0} hasVoted={currentTopic.hasVoted} inline onClick={upvoteTopic} />
 
         {currentTopic.tags.length > 0 && (
           <div className="chip-list topic-detail-tags">
@@ -242,32 +173,13 @@ export default function Topic() {
         <h2>Respostas</h2>
         <div className="stack">
           {replies.map((reply) => (
-            <article className="card reply-card" key={`${reply.author}-${reply.time}-${reply.content}`}>
-              <div className="reply-header">
-                <div>
-                  <strong>{reply.author}</strong>
-                  <p className="mini-meta">{reply.time}</p>
-                </div>
-                <div className="reply-actions">
-                  <button
-                    className={reply.hasVoted ? "vote-button vote-button--compact vote-button--voted" : "vote-button vote-button--compact"}
-                    type="button"
-                    disabled={reply.hasVoted}
-                    onClick={() => upvoteReply(reply)}
-                  >
-                    ▲
-                    <strong>{reply.votes}</strong>
-                    {reply.hasVoted && <span>Votado</span>}
-                  </button>
-                  {isAdmin && (
-                    <Button className="btn--small" onClick={() => deleteReply(reply)}>
-                      Excluir resposta
-                    </Button>
-                  )}
-                </div>
-              </div>
-              <p>{reply.content}</p>
-            </article>
+            <ReplyCard
+              key={`${reply.author}-${reply.time}-${reply.content}`}
+              reply={reply}
+              isAdmin={isAdmin}
+              onDelete={() => deleteReply(reply)}
+              onUpvote={() => upvoteReply(reply)}
+            />
           ))}
         </div>
       </section>
