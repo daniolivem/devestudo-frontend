@@ -1,0 +1,33 @@
+.mentor-card {
+  min-height: 298px;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+}
+
+.mentor-card h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.mentor-copy {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.mentor-card .chip-list {
+  margin: 18px 0;
+}
+
+.mentor-stats {
+  display: grid;
+  gap: 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.mentor-card .btn {
+  width: 100%;
+  margin-top: auto;
+}

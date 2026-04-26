@@ -1,0 +1,119 @@
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.input-group label,
+.field-label {
+  color: #333333;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.input-group input,
+.input-group select,
+.field-input {
+  width: 100%;
+  height: 46px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--white);
+  color: var(--text);
+  outline: none;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.field-input:focus {
+  border-color: #777777;
+}
+
+.btn {
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--white);
+  color: #222222;
+  font-weight: 700;
+}
+
+.btn:hover {
+  border-color: #999999;
+}
+
+.btn--primary {
+  border-color: var(--black);
+  background: var(--black);
+  color: var(--white);
+}
+
+.btn--small {
+  min-height: 32px;
+  padding: 0 14px;
+  font-size: 12px;
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+}
+
+.section-card {
+  padding: 18px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 25px;
+  padding: 0 10px;
+  border-radius: 4px;
+  background: var(--chip);
+  color: #333333;
+  font-size: 12px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.soft {
+  color: var(--soft);
+}
+
+.list-divider > * + * {
+  border-top: 1px solid var(--line);
+}
+
+.full-button {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.wide-card {
+  margin-top: 32px;
+  padding: 28px 24px;
+}

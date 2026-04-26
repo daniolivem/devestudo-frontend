@@ -1,0 +1,32 @@
+.forum-search {
+  width: 100%;
+  max-width: 760px;
+  margin-bottom: 16px;
+}
+
+.topic-card {
+  min-height: 122px;
+  padding: 20px 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: start;
+}
+
+.topic-title {
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.topic-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--soft);
+  font-size: 12px;
+}
+
+.topic-replies {
+  text-align: center;
+  min-width: 70px;
+}
