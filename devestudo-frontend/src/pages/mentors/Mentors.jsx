@@ -81,6 +81,53 @@ const students = [
   { name: "Diego Teles", role: "Backend e DevOps", tags: ["Node.js", "PostgreSQL", "Docker"], sessions: 34 },
 ];
 
+const mentorshipStatus = {
+  REQUESTED: {
+    label: "Solicitada",
+    description: "Aguardando aprovação do mentor.",
+  },
+  APPROVED: {
+    label: "Aprovada",
+    description: "O mentor aprovou sua solicitação. Combine os detalhes pelo canal informado.",
+  },
+  COMPLETED: {
+    label: "Concluída",
+    description: "Mentoria finalizada.",
+  },
+  CANCELLED: {
+    label: "Cancelada",
+    description: "Solicitação cancelada ou recusada.",
+  },
+};
+
+const initialMentorships = [
+  {
+    mentorName: "Carlos Mendes",
+    role: "Backend e DevOps",
+    status: "APPROVED",
+    channel: "Google Meet",
+    availability: "Tardes",
+    format: "Revisão de arquitetura e pareamento",
+  },
+];
+
+const initialMentorRequests = [
+  {
+    id: "request-1",
+    studentName: "João Silva",
+    topic: "React Hooks e organização de componentes",
+    status: "REQUESTED",
+    message: "Quero revisar um projeto pessoal e entender melhor quando criar hooks customizados.",
+  },
+  {
+    id: "request-2",
+    studentName: "Mariana Alves",
+    topic: "TypeScript no frontend",
+    status: "REQUESTED",
+    message: "Tenho dúvidas sobre tipagem de props e chamadas de API.",
+  },
+];
+
 function MentorStudents() {
   const [preferences, setPreferences] = useState({
     availability: "Noites e fins de semana",
@@ -89,6 +136,7 @@ function MentorStudents() {
     instructions: "Envie sua principal dúvida e links do projeto antes da conversa.",
   });
   const [isPreferencesSaved, setIsPreferencesSaved] = useState(false);
+  const [mentorRequests, setMentorRequests] = useState(initialMentorRequests);
 
   function handlePreferencesSubmit(e) {
     e.preventDefault();
@@ -103,12 +151,54 @@ function MentorStudents() {
     setIsPreferencesSaved(true);
   }
 
+  function updateRequestStatus(requestId, status) {
+    setMentorRequests((currentRequests) =>
+      currentRequests.map((request) => (request.id === requestId ? { ...request, status } : request)),
+    );
+  }
+
   return (
     <Layout>
       <header className="page-header">
         <h1 className="page-title">Sistema de Mentoria Alunos</h1>
         <p className="page-subtitle">Alunos em sua mentoria</p>
       </header>
+
+      <section className="card mentorship-status-panel">
+        <div className="mentorship-section-header">
+          <div>
+            <h2>Solicitações recebidas</h2>
+            <p className="page-subtitle">Aprove ou recuse pedidos de mentoria dos alunos.</p>
+          </div>
+        </div>
+
+        <div className="list-divider">
+          {mentorRequests.map((request) => (
+            <article className="mentorship-row" key={request.id}>
+              <div>
+                <h3>{request.studentName}</h3>
+                <p className="mini-meta">{request.topic}</p>
+                <p className="mentorship-message">{request.message}</p>
+              </div>
+
+              <span className="status-badge">{mentorshipStatus[request.status].label}</span>
+
+              {request.status === "REQUESTED" ? (
+                <div className="mentorship-actions">
+                  <Button className="btn--primary btn--small" onClick={() => updateRequestStatus(request.id, "APPROVED")}>
+                    Aprovar
+                  </Button>
+                  <Button className="btn--small" onClick={() => updateRequestStatus(request.id, "CANCELLED")}>
+                    Recusar
+                  </Button>
+                </div>
+              ) : (
+                <p className="mini-meta">{mentorshipStatus[request.status].description}</p>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
 
       <div className="grid-2">
         {students.map((student) => (
@@ -186,6 +276,7 @@ export default function Mentors() {
   const role = searchParams.get("role");
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [requestedMentor, setRequestedMentor] = useState(null);
+  const [studentMentorships, setStudentMentorships] = useState(initialMentorships);
 
   if (role === "admin" || role === "mentor") {
     return <MentorStudents />;
@@ -197,6 +288,37 @@ export default function Mentors() {
         <h1 className="page-title">Sistema de Mentoria</h1>
         <p className="page-subtitle">Conecte-se com mentores especializados na sua stack</p>
       </header>
+
+      <section className="card mentorship-status-panel">
+        <div className="mentorship-section-header">
+          <div>
+            <h2>Minhas mentorias</h2>
+            <p className="page-subtitle">Acompanhe solicitações enviadas e mentorias aprovadas.</p>
+          </div>
+        </div>
+
+        {studentMentorships.length > 0 ? (
+          <div className="list-divider">
+            {studentMentorships.map((mentorship) => (
+              <article className="mentorship-row" key={`${mentorship.mentorName}-${mentorship.status}`}>
+                <div>
+                  <h3>{mentorship.mentorName}</h3>
+                  <p className="mini-meta">{mentorship.role}</p>
+                  <p className="mentorship-message">{mentorshipStatus[mentorship.status].description}</p>
+                  {mentorship.status === "APPROVED" && (
+                    <p className="mini-meta">
+                      Canal: {mentorship.channel} • Disponibilidade: {mentorship.availability}
+                    </p>
+                  )}
+                </div>
+                <span className="status-badge">{mentorshipStatus[mentorship.status].label}</span>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="modal-message">Você ainda não solicitou mentorias.</p>
+        )}
+      </section>
 
       <div className="grid-2">
         {mentors.map((mentor) => (
@@ -235,6 +357,17 @@ export default function Mentors() {
           mentor={selectedMentor}
           onClose={() => setSelectedMentor(null)}
           onConfirm={() => {
+            setStudentMentorships((currentMentorships) => [
+              {
+                mentorName: selectedMentor.name,
+                role: selectedMentor.role,
+                status: "REQUESTED",
+                channel: selectedMentor.channel,
+                availability: selectedMentor.availability,
+                format: selectedMentor.format,
+              },
+              ...currentMentorships,
+            ]);
             setRequestedMentor(selectedMentor);
             setSelectedMentor(null);
           }}

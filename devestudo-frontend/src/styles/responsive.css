@@ -59,7 +59,8 @@
   .modal-header,
   .modal-actions,
   .reply-header,
-  .mentor-preferences-actions {
+  .mentor-preferences-actions,
+  .mentorship-section-header {
     flex-direction: column;
   }
 
@@ -69,7 +70,8 @@
 
   .group-actions,
   .profile-actions,
-  .admin-list-row {
+  .admin-list-row,
+  .mentorship-row {
     grid-template-columns: 1fr;
     gap: 12px;
   }
