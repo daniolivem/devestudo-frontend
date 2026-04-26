@@ -2,19 +2,20 @@ import "./ForgotPassword.css";
 
 export default function ForgotPassword() {
   return (
-    <div className="forgot-password">
-      <div className="container">
-        <h1>Resetar Senha</h1>
+    <div className="auth-page">
+      <div className="auth-card auth-card--compact">
+        <h1 className="auth-title">Recuperar Senha</h1>
+        <p className="auth-subtitle">Informe o E-mail para recuperação de senha</p>
 
-        <p className="subtitle">
-          Informe o e-mail para recuperação de senha
-        </p>
+        <form className="auth-form">
+          <div className="input-group">
+            <label>E-mail</label>
+            <input type="email" placeholder="seu@email.com" />
+          </div>
 
-        <form className="form">
-          <label>Email</label>
-          <input type="email" placeholder="your@email.com" />
-
-          <button type="submit">Enviar</button>
+          <button className="btn btn--primary" type="submit">
+            Enviar
+          </button>
         </form>
       </div>
     </div>

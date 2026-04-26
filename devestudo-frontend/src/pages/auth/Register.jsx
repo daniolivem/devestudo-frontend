@@ -4,19 +4,21 @@ import Button from "../../components/ui/Button";
 
 export default function Register() {
   return (
-    <div className="register">
-      <div className="container">
-        <h1>Crie sua conta</h1>
-        <p className="subtitle">Preencha seus dados</p>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h1 className="auth-title">Criar Conta</h1>
+        <p className="auth-subtitle">Preencha os dados de novo usuário</p>
 
-        <form className="form">
-          <Input label="Email" type="email" placeholder="seu@email.com" />
-          <Input label="Name" placeholder="Seu nome" />
+        <form className="auth-form">
+          <Input label="E-mail" type="email" placeholder="seu@email.com" />
+          <Input label="Nome" placeholder="Nome" />
           <Input label="Telefone" placeholder="(00) 0000-0000" />
-          <Input label="Senha" type="password" />
-          <Input label="Confirmar Senha" type="password" />
+          <Input label="Senha" type="password" placeholder="••••••••" />
+          <Input label="Confirmar Senha" type="password" placeholder="••••••••" />
 
-          <Button>Criar Conta</Button>
+          <Button className="btn--primary" type="submit">
+            Cadastrar
+          </Button>
         </form>
       </div>
     </div>

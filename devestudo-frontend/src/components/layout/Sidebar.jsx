@@ -1,31 +1,33 @@
 import { NavLink } from "react-router-dom";
 
 export default function Sidebar() {
+  const links = [
+    { to: "/dashboard", label: "Home" },
+    { to: "/forum", label: "Fórum" },
+    { to: "/groups", label: "Grupos" },
+    { to: "/mentors", label: "Mentoria" },
+    { to: "/profile", label: "Perfil" },
+  ];
+
   return (
-    <aside style={{ width: "220px", padding: "20px" }}>
-      <h2>DevEstudo</h2>
+    <aside className="sidebar">
+      <div className="brand">
+        Comunidade
+        <br />
+        DevEstudo
+      </div>
 
-      <nav style={{ marginTop: "20px" }}>
-        <p>
-          <NavLink to="/dashboard" className={({ isActive }) => isActive ? "active" : ""}>
-            Dashboard
+      <nav className="sidebar-nav" aria-label="Navegação principal">
+        {links.map((link) => (
+          <NavLink key={link.to} to={link.to} className="nav-link">
+            {link.label}
           </NavLink>
-        </p>
-
-        <p>
-          <NavLink to="/forum" className={({ isActive }) => isActive ? "active" : ""}>
-            Fórum
-          </NavLink>
-        </p>
-
-        <p>
-          <NavLink to="/groups">Grupos</NavLink>
-        </p>
-
-        <p>
-          <NavLink to="/mentors">Mentores</NavLink>
-        </p>
+        ))}
       </nav>
+
+      <NavLink to="/" className="logout-link">
+        Sair
+      </NavLink>
     </aside>
   );
 }
