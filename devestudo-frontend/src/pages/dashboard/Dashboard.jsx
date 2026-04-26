@@ -224,7 +224,9 @@ export default function Dashboard() {
               </article>
             ))}
           </div>
-          <Button className="full-button">Ver todos os mentores</Button>
+          <Button className="full-button" onClick={() => navigate(`/mentors${roleQuery}`)}>
+            Ver todos os mentores
+          </Button>
         </section>
       </div>
     </Layout>

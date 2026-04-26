@@ -34,6 +34,11 @@
   outline-offset: 2px;
 }
 
+.forum-admin-actions {
+  display: grid;
+  gap: 8px;
+}
+
 .topic-title {
   margin-bottom: 12px;
   font-size: 16px;
@@ -65,6 +70,13 @@
 
 .topic-detail {
   padding: 24px;
+}
+
+.topic-detail-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
 }
 
 .topic-detail-tags {
@@ -103,6 +115,12 @@
   justify-content: space-between;
   gap: 18px;
   margin-bottom: 14px;
+}
+
+.reply-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 .reply-form-card {

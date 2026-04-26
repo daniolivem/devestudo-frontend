@@ -80,6 +80,7 @@ export default function Forum() {
   const isAdmin = role === "admin";
   const roleQuery = role === "admin" || role === "mentor" ? `?role=${role}` : "";
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [topicBeingEdited, setTopicBeingEdited] = useState(null);
   const [forumTopics, setForumTopics] = useState(topics);
 
   function openTopic(topic) {
@@ -112,12 +113,46 @@ export default function Forum() {
     openTopic(newTopic);
   }
 
+  function handleUpdateThread(e) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const originalTitle = String(formData.get("originalTitle") || "");
+    const title = String(formData.get("title") || "").trim();
+    const content = String(formData.get("content") || "").trim();
+    const selectedTags = formData.getAll("tags").map((tag) => String(tag));
+
+    if (!title || !content) {
+      return;
+    }
+
+    setForumTopics((currentTopics) =>
+      currentTopics.map((topic) =>
+        topic.title === originalTitle
+          ? {
+              ...topic,
+              title,
+              content,
+              tags: selectedTags,
+              time: "editado agora",
+            }
+          : topic,
+      ),
+    );
+    setTopicBeingEdited(null);
+  }
+
+  function deleteTopic(topicTitle) {
+    setForumTopics((currentTopics) => currentTopics.filter((topic) => topic.title !== topicTitle));
+  }
+
   return (
     <Layout>
       <header className="page-header forum-header">
         <div>
-          <h1 className="page-title">Fórum Temático</h1>
-          <p className="page-subtitle">Compartilhe dúvidas e discussões com a comunidade</p>
+          <h1 className="page-title">{isAdmin ? "Moderação de Fórum" : "Fórum Temático"}</h1>
+          <p className="page-subtitle">
+            {isAdmin ? "Gerencie tópicos, conteúdos e respostas da comunidade" : "Compartilhe dúvidas e discussões com a comunidade"}
+          </p>
         </div>
         <Button className="btn--primary" onClick={() => setIsModalOpen(true)}>
           Criar novo fórum
@@ -169,15 +204,35 @@ export default function Forum() {
               )}
             </div>
             {isAdmin ? (
-              <Button
-                className="btn--small"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openTopic(topic);
-                }}
-              >
-                Moderar
-              </Button>
+              <div className="forum-admin-actions">
+                <Button
+                  className="btn--small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openTopic(topic);
+                  }}
+                >
+                  Moderar
+                </Button>
+                <Button
+                  className="btn--small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setTopicBeingEdited(topic);
+                  }}
+                >
+                  Editar
+                </Button>
+                <Button
+                  className="btn--small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteTopic(topic.title);
+                  }}
+                >
+                  Excluir
+                </Button>
+              </div>
             ) : (
               <p className="topic-replies mini-meta">
                 {topic.replies}
@@ -232,6 +287,58 @@ export default function Forum() {
                 <Button onClick={() => setIsModalOpen(false)}>Cancelar</Button>
                 <Button className="btn--primary" type="submit">
                   Criar fórum
+                </Button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
+
+      {topicBeingEdited && (
+        <div className="modal-backdrop" role="presentation" onClick={() => setTopicBeingEdited(null)}>
+          <section
+            className="card modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-thread-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <div>
+                <h2 id="edit-thread-title">Editar fórum</h2>
+                <p className="page-subtitle">Atualize título, conteúdo e tecnologias do tópico</p>
+              </div>
+            </div>
+
+            <form className="modal-form" onSubmit={handleUpdateThread}>
+              <input type="hidden" name="originalTitle" value={topicBeingEdited.title} />
+
+              <div className="input-group">
+                <label>Título</label>
+                <input name="title" defaultValue={topicBeingEdited.title} />
+              </div>
+
+              <div className="input-group">
+                <label>Conteúdo</label>
+                <textarea name="content" defaultValue={topicBeingEdited.content || ""} rows="6" />
+              </div>
+
+              <fieldset className="tag-fieldset">
+                <legend>Tecnologias</legend>
+                <div className="tag-options">
+                  {tags.map((tag) => (
+                    <label className="tag-option" key={tag}>
+                      <input type="checkbox" name="tags" value={tag} defaultChecked={topicBeingEdited.tags.includes(tag)} />
+                      <span>{tag}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <div className="modal-actions">
+                <Button onClick={() => setTopicBeingEdited(null)}>Cancelar</Button>
+                <Button className="btn--primary" type="submit">
+                  Salvar alterações
                 </Button>
               </div>
             </form>

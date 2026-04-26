@@ -59,6 +59,7 @@ export default function Topic() {
   const [searchParams] = useSearchParams();
   const role = searchParams.get("role");
   const roleQuery = role === "admin" || role === "mentor" ? `?role=${role}` : "";
+  const isAdmin = role === "admin";
 
   const initialTopic = useMemo(() => {
     const routedTopic = location.state?.topic;
@@ -83,7 +84,9 @@ export default function Topic() {
     );
   }, [location.state, topicSlug]);
 
+  const [currentTopic, setCurrentTopic] = useState(initialTopic);
   const [replies, setReplies] = useState(initialTopic.replies);
+  const [isEditingTopic, setIsEditingTopic] = useState(false);
 
   function handleReply(e) {
     e.preventDefault();
@@ -106,6 +109,29 @@ export default function Topic() {
     e.currentTarget.reset();
   }
 
+  function handleUpdateTopic(e) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const title = String(formData.get("title") || "").trim();
+    const content = String(formData.get("content") || "").trim();
+
+    if (!title || !content) {
+      return;
+    }
+
+    setCurrentTopic((topic) => ({
+      ...topic,
+      title,
+      content,
+      time: "editado agora",
+    }));
+    setIsEditingTopic(false);
+  }
+
+  function deleteReply(replyToDelete) {
+    setReplies((currentReplies) => currentReplies.filter((reply) => reply !== replyToDelete));
+  }
+
   return (
     <Layout>
       <header className="page-header topic-detail-header">
@@ -113,18 +139,30 @@ export default function Topic() {
       </header>
 
       <article className="card topic-detail">
-        <h1 className="page-title">{initialTopic.title}</h1>
+        <div className="topic-detail-title-row">
+          <h1 className="page-title">{currentTopic.title}</h1>
+          {isAdmin && (
+            <div className="forum-admin-actions">
+              <Button className="btn--small" onClick={() => setIsEditingTopic(true)}>
+                Editar
+              </Button>
+              <Button className="btn--small" onClick={() => navigate(`/forum${roleQuery}`)}>
+                Excluir tópico
+              </Button>
+            </div>
+          )}
+        </div>
         <p className="topic-meta">
-          <span>por {initialTopic.author}</span>
+          <span>por {currentTopic.author}</span>
           <span>•</span>
-          <span>{initialTopic.time}</span>
+          <span>{currentTopic.time}</span>
           <span>•</span>
           <span>{replies.length} respostas</span>
         </p>
 
-        {initialTopic.tags.length > 0 && (
+        {currentTopic.tags.length > 0 && (
           <div className="chip-list topic-detail-tags">
-            {initialTopic.tags.map((tag) => (
+            {currentTopic.tags.map((tag) => (
               <span className="chip" key={tag}>
                 {tag}
               </span>
@@ -132,8 +170,30 @@ export default function Topic() {
           </div>
         )}
 
-        <p className="topic-detail-content">{initialTopic.content}</p>
+        <p className="topic-detail-content">{currentTopic.content}</p>
       </article>
+
+      {isAdmin && isEditingTopic && (
+        <section className="card reply-form-card">
+          <h2>Editar tópico</h2>
+          <form className="modal-form" onSubmit={handleUpdateTopic}>
+            <div className="input-group">
+              <label>Título</label>
+              <input name="title" defaultValue={currentTopic.title} />
+            </div>
+            <div className="input-group">
+              <label>Conteúdo</label>
+              <textarea name="content" defaultValue={currentTopic.content} rows="6" />
+            </div>
+            <div className="modal-actions">
+              <Button onClick={() => setIsEditingTopic(false)}>Cancelar</Button>
+              <Button className="btn--primary" type="submit">
+                Salvar alterações
+              </Button>
+            </div>
+          </form>
+        </section>
+      )}
 
       <section className="topic-replies-section">
         <h2>Respostas</h2>
@@ -145,7 +205,14 @@ export default function Topic() {
                   <strong>{reply.author}</strong>
                   <p className="mini-meta">{reply.time}</p>
                 </div>
-                <span className="status-badge">{reply.votes} votos</span>
+                <div className="reply-actions">
+                  <span className="status-badge">{reply.votes} votos</span>
+                  {isAdmin && (
+                    <Button className="btn--small" onClick={() => deleteReply(reply)}>
+                      Excluir resposta
+                    </Button>
+                  )}
+                </div>
               </div>
               <p>{reply.content}</p>
             </article>
@@ -153,7 +220,7 @@ export default function Topic() {
         </div>
       </section>
 
-      {role !== "admin" && (
+      {!isAdmin && (
         <section className="card reply-form-card">
           <h2>Adicionar resposta</h2>
           <form className="modal-form" onSubmit={handleReply}>

@@ -59,6 +59,8 @@
   .modal-header,
   .modal-actions,
   .reply-header,
+  .reply-actions,
+  .topic-detail-title-row,
   .mentor-preferences-actions,
   .mentorship-section-header {
     flex-direction: column;
