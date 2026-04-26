@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
 
@@ -63,6 +64,9 @@ const topics = [
 ];
 
 export default function Forum() {
+  const [searchParams] = useSearchParams();
+  const isAdmin = searchParams.get("role") === "admin";
+
   return (
     <Layout>
       <header className="page-header">
@@ -99,11 +103,15 @@ export default function Forum() {
                 ))}
               </div>
             </div>
-            <p className="topic-replies mini-meta">
-              {topic.replies}
-              <br />
-              respostas
-            </p>
+            {isAdmin ? (
+              <Button className="btn--small">Moderar</Button>
+            ) : (
+              <p className="topic-replies mini-meta">
+                {topic.replies}
+                <br />
+                respostas
+              </p>
+            )}
           </article>
         ))}
       </div>

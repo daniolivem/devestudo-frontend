@@ -307,6 +307,151 @@ p {
   padding: 18px;
 }
 
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 4px 0 2px;
+}
+
+.stat-card {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+}
+
+.stat-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--black);
+  color: var(--white);
+  font-size: 10px;
+}
+
+.stat-card p {
+  font-size: 14px;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.admin-panel {
+  min-height: 580px;
+  padding: 18px;
+}
+
+.admin-panel h2 {
+  font-size: 18px;
+}
+
+.admin-panel h3 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 18px 0 10px;
+}
+
+.admin-panel-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.user-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid #9f9f9f;
+  background: linear-gradient(#d8d8d8, #bdbdbd);
+}
+
+.avatar--small {
+  width: 28px;
+  height: 28px;
+  border: none;
+}
+
+.role-pill {
+  display: inline-flex;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--black);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.admin-stats {
+  margin-top: 16px;
+  padding: 12px;
+}
+
+.admin-stats h3 {
+  margin-top: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.admin-stats p {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-top: 1px solid var(--line-strong);
+}
+
+.mock-table {
+  border: 1px solid #111111;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mock-row {
+  min-height: 50px;
+  display: grid;
+  grid-template-columns: 28px 1fr 0.7fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  border-top: 1px solid #111111;
+}
+
+.mock-row:first-child {
+  border-top: 0;
+}
+
+.mock-row > span:not(.avatar) {
+  height: 13px;
+  border-radius: 8px;
+  background: #cccccc;
+}
+
+.mock-row > div {
+  display: grid;
+  gap: 4px;
+}
+
+.mock-row--forum {
+  grid-template-columns: 1fr 40px auto;
+}
+
 .dashboard-card h2,
 .section-card h2 {
   font-size: 16px;
@@ -551,6 +696,7 @@ p {
   }
 
   .grid-2,
+  .stats-row,
   .filter-bar {
     grid-template-columns: 1fr;
   }

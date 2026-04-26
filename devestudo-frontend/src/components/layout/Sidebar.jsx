@@ -1,12 +1,15 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 
 export default function Sidebar() {
+  const [searchParams] = useSearchParams();
+  const role = searchParams.get("role");
+  const query = role === "admin" ? "?role=admin" : "";
   const links = [
-    { to: "/dashboard", label: "Home" },
-    { to: "/forum", label: "Fórum" },
-    { to: "/groups", label: "Grupos" },
-    { to: "/mentors", label: "Mentoria" },
-    { to: "/profile", label: "Perfil" },
+    { to: `/dashboard${query}`, label: "Home" },
+    { to: `/forum${query}`, label: "Fórum" },
+    { to: `/groups${query}`, label: "Grupos" },
+    { to: `/mentors${query}`, label: "Mentoria" },
+    { to: `/profile${query}`, label: "Perfil" },
   ];
 
   return (

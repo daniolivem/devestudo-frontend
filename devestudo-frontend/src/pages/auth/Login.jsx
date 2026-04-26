@@ -36,7 +36,7 @@ export default function Login() {
           <Link to="/register">Criar conta</Link>
         </div>
 
-        <Link className="admin-link" to="/dashboard?admin=true">
+        <Link className="admin-link" to="/dashboard?role=admin">
           Login Administrativo
         </Link>
       </div>

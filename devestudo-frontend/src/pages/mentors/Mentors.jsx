@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
 
@@ -52,7 +53,64 @@ const mentors = [
   },
 ];
 
+const students = [
+  { name: "Patrícia Melo", role: "Frontend Development", tags: ["React", "TypeScript", "Next.js"], sessions: 45 },
+  { name: "Ronaldo Lima", role: "Backend e DevOps", tags: ["Node.js", "PostgreSQL", "Docker"], sessions: 62 },
+  { name: "Rogério Marques", role: "Backend e DevOps", tags: ["Node.js", "PostgreSQL", "Docker"], sessions: 32 },
+  { name: "Charles Mendes", role: "Backend e DevOps", tags: ["Node.js", "PostgreSQL", "Docker"], sessions: 56 },
+  { name: "Rogério Ceni", role: "Backend e DevOps", tags: ["Node.js", "PostgreSQL", "Docker"], sessions: 28 },
+  { name: "Diego Teles", role: "Backend e DevOps", tags: ["Node.js", "PostgreSQL", "Docker"], sessions: 34 },
+];
+
+function MentorStudents() {
+  return (
+    <Layout>
+      <header className="page-header">
+        <h1 className="page-title">Sistema de Mentoria Alunos</h1>
+        <p className="page-subtitle">Alunos em sua mentoria</p>
+      </header>
+
+      <div className="grid-2">
+        {students.map((student) => (
+          <article className="card mentor-card" key={student.name}>
+            <h2>{student.name}</h2>
+            <p className="mentor-copy">{student.role}</p>
+            <div className="chip-list">
+              {student.tags.map((tag) => (
+                <span className="chip" key={tag}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div className="mentor-stats">
+              <strong>
+                0 mensagens <Button className="btn--primary btn--small">Responder</Button>
+              </strong>
+              <span className="soft">{student.sessions} sessões realizadas</span>
+              <span>Offline</span>
+            </div>
+            <div className="group-actions">
+              <Button className="btn--primary">Bloquear</Button>
+              <Button className="btn--primary">Excluir</Button>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <section className="card wide-card">
+        <h2 style={{ fontSize: 20, marginBottom: 24 }}>Adicionar aluno</h2>
+        <Button>+Adicionar</Button>
+      </section>
+    </Layout>
+  );
+}
+
 export default function Mentors() {
+  const [searchParams] = useSearchParams();
+  if (searchParams.get("role") === "admin") {
+    return <MentorStudents />;
+  }
+
   return (
     <Layout>
       <header className="page-header">

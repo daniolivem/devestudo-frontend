@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
 
@@ -61,6 +62,9 @@ const groups = [
 ];
 
 export default function Groups() {
+  const [searchParams] = useSearchParams();
+  const isAdmin = searchParams.get("role") === "admin";
+
   return (
     <Layout>
       <header className="page-header">
@@ -97,10 +101,14 @@ export default function Groups() {
                 </span>
               ))}
             </div>
-            <div className="group-actions">
-              <Button>Editar</Button>
-              <Button>Excluir</Button>
-            </div>
+            {isAdmin ? (
+              <div className="group-actions">
+                <Button>Editar</Button>
+                <Button>Excluir</Button>
+              </div>
+            ) : (
+              <Button className="full-button">Solicitar Entrada</Button>
+            )}
           </article>
         ))}
       </div>
