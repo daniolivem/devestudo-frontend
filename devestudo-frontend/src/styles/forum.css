@@ -1,3 +1,10 @@
+.forum-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
 .forum-search {
   width: 100%;
   max-width: 760px;
@@ -24,6 +31,13 @@
   gap: 12px;
   color: var(--soft);
   font-size: 12px;
+}
+
+.topic-preview {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 .topic-replies {

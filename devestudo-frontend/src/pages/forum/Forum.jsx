@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
@@ -66,11 +67,45 @@ const topics = [
 export default function Forum() {
   const [searchParams] = useSearchParams();
   const isAdmin = searchParams.get("role") === "admin";
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [forumTopics, setForumTopics] = useState(topics);
+
+  function handleCreateThread(e) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const title = String(formData.get("title") || "").trim();
+    const content = String(formData.get("content") || "").trim();
+    const selectedTags = formData.getAll("tags").map((tag) => String(tag));
+
+    if (!title || !content) {
+      return;
+    }
+
+    setForumTopics((currentTopics) => [
+      {
+        title,
+        content,
+        author: "Você",
+        time: "agora",
+        replies: 0,
+        tags: selectedTags,
+      },
+      ...currentTopics,
+    ]);
+    setIsModalOpen(false);
+    e.currentTarget.reset();
+  }
 
   return (
     <Layout>
-      <header className="page-header">
-        <h1 className="page-title">Fórum Temático</h1>
+      <header className="page-header forum-header">
+        <div>
+          <h1 className="page-title">Fórum Temático</h1>
+          <p className="page-subtitle">Compartilhe dúvidas e discussões com a comunidade</p>
+        </div>
+        <Button className="btn--primary" onClick={() => setIsModalOpen(true)}>
+          Criar novo fórum
+        </Button>
       </header>
 
       <input className="field-input forum-search" placeholder="Buscar por título ou palavra-chave..." />
@@ -84,7 +119,7 @@ export default function Forum() {
       </div>
 
       <div className="stack">
-        {topics.map((topic) => (
+        {forumTopics.map((topic) => (
           <article className="card topic-card" key={topic.title}>
             <div>
               <h2 className="topic-title">{topic.title}</h2>
@@ -95,13 +130,16 @@ export default function Forum() {
                 <span>•</span>
                 <span>{topic.replies}</span>
               </p>
-              <div className="chip-list" style={{ marginTop: 16 }}>
-                {topic.tags.map((tag) => (
-                  <span className="chip" key={tag}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              {topic.content && <p className="topic-preview">{topic.content}</p>}
+              {topic.tags.length > 0 && (
+                <div className="chip-list" style={{ marginTop: 16 }}>
+                  {topic.tags.map((tag) => (
+                    <span className="chip" key={tag}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
             {isAdmin ? (
               <Button className="btn--small">Moderar</Button>
@@ -115,6 +153,56 @@ export default function Forum() {
           </article>
         ))}
       </div>
+
+      {isModalOpen && (
+        <div className="modal-backdrop" role="presentation" onClick={() => setIsModalOpen(false)}>
+          <section
+            className="card modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="create-thread-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <div>
+                <h2 id="create-thread-title">Criar novo fórum</h2>
+                <p className="page-subtitle">Informe os dados iniciais do tópico</p>
+              </div>
+            </div>
+
+            <form className="modal-form" onSubmit={handleCreateThread}>
+              <div className="input-group">
+                <label>Título</label>
+                <input name="title" placeholder="Ex: Como estudar React Hooks?" />
+              </div>
+
+              <div className="input-group">
+                <label>Conteúdo</label>
+                <textarea name="content" placeholder="Descreva sua dúvida ou discussão..." rows="6" />
+              </div>
+
+              <fieldset className="tag-fieldset">
+                <legend>Tecnologias</legend>
+                <div className="tag-options">
+                  {tags.map((tag) => (
+                    <label className="tag-option" key={tag}>
+                      <input type="checkbox" name="tags" value={tag} />
+                      <span>{tag}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <div className="modal-actions">
+                <Button onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+                <Button className="btn--primary" type="submit">
+                  Criar fórum
+                </Button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
     </Layout>
   );
 }

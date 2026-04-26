@@ -55,6 +55,12 @@
     grid-template-columns: 1fr;
   }
 
+  .forum-header,
+  .modal-header,
+  .modal-actions {
+    flex-direction: column;
+  }
+
   .topic-replies {
     text-align: left;
   }
