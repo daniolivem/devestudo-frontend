@@ -27,6 +27,43 @@
   font-size: 13px;
 }
 
+.mentor-rating-display {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.star-rating {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.star {
+  min-height: 24px;
+  padding: 0 1px;
+  border: 0;
+  background: transparent;
+  color: var(--soft);
+  font-size: 20px;
+  line-height: 1;
+}
+
+button.star {
+  cursor: pointer;
+}
+
+.star--active {
+  color: var(--black);
+}
+
+.mentor-feedback-form {
+  display: grid;
+  gap: 16px;
+  max-width: 420px;
+  margin-top: 24px;
+}
+
 .mentor-card .btn {
   width: 100%;
   margin-top: auto;
@@ -111,6 +148,11 @@
   padding: 16px 0;
 }
 
+.mentorship-row > .status-badge {
+  justify-self: start;
+  align-self: start;
+}
+
 .mentorship-row h3 {
   font-size: 16px;
 }
@@ -123,8 +165,10 @@
 }
 
 .mentorship-actions {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  justify-content: flex-end;
 }
 
 .mentors-admin-header {
@@ -132,6 +176,10 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
+}
+
+.mentors-admin-header .btn {
+  min-width: 190px;
 }
 
 .admin-mentors-panel {
@@ -175,6 +223,11 @@
 }
 
 @media (max-width: 900px) {
+  .mentorship-status-panel,
+  .admin-mentors-panel {
+    padding: 16px;
+  }
+
   .admin-mentors-head {
     display: none;
   }

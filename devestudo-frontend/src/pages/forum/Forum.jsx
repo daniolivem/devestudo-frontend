@@ -9,58 +9,74 @@ const topics = [
   {
     title: "Como implementar autenticação JWT em Node.js?",
     author: "Maria Santos",
-    time: "2h atrás",
+    lastInteractionHours: 2,
     replies: 34,
+    votes: 18,
     tags: ["Node.js", "JavaScript"],
+    createdByCurrentMentor: false,
   },
   {
     title: "Diferença entre useEffect e useLayoutEffect no React",
     author: "Pedro Oliveira",
-    time: "4h atrás",
+    lastInteractionHours: 4,
     replies: 28,
+    votes: 11,
     tags: ["React", "JavaScript"],
+    createdByCurrentMentor: true,
   },
   {
     title: "Melhores práticas para estruturar projetos Spring Boot",
     author: "Ana Costa",
-    time: "5h atrás",
+    lastInteractionHours: 5,
     replies: 19,
+    votes: 7,
     tags: ["Java"],
+    createdByCurrentMentor: false,
   },
   {
     title: "Como fazer deploy de aplicação Python no Heroku?",
     author: "Carlos Mendes",
-    time: "6h atrás",
+    lastInteractionHours: 6,
     replies: 42,
+    votes: 15,
     tags: ["Python"],
+    createdByCurrentMentor: false,
   },
   {
     title: "TypeScript: quando usar type vs interface?",
     author: "Juliana Rocha",
-    time: "8h atrás",
+    lastInteractionHours: 8,
     replies: 56,
+    votes: 21,
     tags: ["TypeScript", "JavaScript"],
+    createdByCurrentMentor: true,
   },
   {
     title: "Otimização de queries em PostgreSQL",
     author: "Roberto Silva",
-    time: "10h atrás",
+    lastInteractionHours: 10,
     replies: 23,
+    votes: 9,
     tags: ["Node.js"],
+    createdByCurrentMentor: false,
   },
   {
     title: "Como gerenciar estado global no React sem Redux?",
     author: "Fernanda Lima",
-    time: "12h atrás",
+    lastInteractionHours: 12,
     replies: 67,
+    votes: 25,
     tags: ["React", "JavaScript"],
+    createdByCurrentMentor: false,
   },
   {
     title: "Introdução ao desenvolvimento de APIs REST",
     author: "Bruno Costa",
-    time: "1d atrás",
+    lastInteractionHours: 24,
     replies: 89,
+    votes: 30,
     tags: ["Node.js", "JavaScript"],
+    createdByCurrentMentor: false,
   },
 ];
 
@@ -73,11 +89,25 @@ function createTopicSlug(title) {
     .replace(/(^-|-$)/g, "");
 }
 
+function formatLastInteraction(hours) {
+  if (hours === 0) {
+    return "agora";
+  }
+
+  if (hours < 24) {
+    return `há ${hours}h`;
+  }
+
+  const days = Math.floor(hours / 24);
+  return `há ${days}d`;
+}
+
 export default function Forum() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const role = searchParams.get("role");
   const isAdmin = role === "admin";
+  const isMentor = role === "mentor";
   const roleQuery = role === "admin" || role === "mentor" ? `?role=${role}` : "";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [topicBeingEdited, setTopicBeingEdited] = useState(null);
@@ -102,9 +132,11 @@ export default function Forum() {
       title,
       content,
       author: "Você",
-      time: "agora",
+      lastInteractionHours: 0,
       replies: 0,
+      votes: 0,
       tags: selectedTags,
+      createdByCurrentMentor: isMentor,
     };
 
     setForumTopics((currentTopics) => [newTopic, ...currentTopics]);
@@ -133,7 +165,7 @@ export default function Forum() {
               title,
               content,
               tags: selectedTags,
-              time: "editado agora",
+              lastInteractionHours: 0,
             }
           : topic,
       ),
@@ -145,13 +177,23 @@ export default function Forum() {
     setForumTopics((currentTopics) => currentTopics.filter((topic) => topic.title !== topicTitle));
   }
 
+  function upvoteTopic(topicTitle) {
+    setForumTopics((currentTopics) =>
+      currentTopics.map((topic) => (topic.title === topicTitle ? { ...topic, votes: topic.votes + 1 } : topic)),
+    );
+  }
+
   return (
     <Layout>
       <header className="page-header forum-header">
         <div>
           <h1 className="page-title">{isAdmin ? "Moderação de Fórum" : "Fórum Temático"}</h1>
           <p className="page-subtitle">
-            {isAdmin ? "Gerencie tópicos, conteúdos e respostas da comunidade" : "Compartilhe dúvidas e discussões com a comunidade"}
+            {isAdmin
+              ? "Gerencie tópicos, conteúdos e respostas da comunidade"
+              : isMentor
+                ? "Crie fóruns, gerencie os seus tópicos e participe das discussões da comunidade"
+                : "Compartilhe dúvidas e discussões com a comunidade"}
           </p>
         </div>
         <Button className="btn--primary" onClick={() => setIsModalOpen(true)}>
@@ -188,9 +230,15 @@ export default function Forum() {
               <p className="topic-meta">
                 <span>por {topic.author}</span>
                 <span>•</span>
-                <span>{topic.time}</span>
+                <span>Última interação {formatLastInteraction(topic.lastInteractionHours)}</span>
                 <span>•</span>
-                <span>{topic.replies}</span>
+                <span>{topic.replies} respostas</span>
+                {isMentor && topic.createdByCurrentMentor && (
+                  <>
+                    <span>•</span>
+                    <span>Criado por você</span>
+                  </>
+                )}
               </p>
               {topic.content && <p className="topic-preview">{topic.content}</p>}
               {topic.tags.length > 0 && (
@@ -203,7 +251,20 @@ export default function Forum() {
                 </div>
               )}
             </div>
-            {isAdmin ? (
+            <div className="topic-side">
+              <button
+                className="vote-button"
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  upvoteTopic(topic.title);
+                }}
+                aria-label={`Dar upvote em ${topic.title}`}
+              >
+                ▲
+                <strong>{topic.votes}</strong>
+              </button>
+            {isAdmin || (isMentor && topic.createdByCurrentMentor) ? (
               <div className="forum-admin-actions">
                 <Button
                   className="btn--small"
@@ -212,7 +273,7 @@ export default function Forum() {
                     openTopic(topic);
                   }}
                 >
-                  Moderar
+                  {isAdmin ? "Moderar" : "Abrir"}
                 </Button>
                 <Button
                   className="btn--small"
@@ -240,6 +301,7 @@ export default function Forum() {
                 respostas
               </p>
             )}
+            </div>
           </article>
         ))}
       </div>

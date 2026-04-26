@@ -7,7 +7,8 @@ const topicDetails = {
   "como-implementar-autenticacao-jwt-em-node-js": {
     title: "Como implementar autenticação JWT em Node.js?",
     author: "Maria Santos",
-    time: "2h atrás",
+    lastInteractionHours: 2,
+    votes: 18,
     tags: ["Node.js", "JavaScript"],
     content:
       "Estou criando uma API em Node.js e quero proteger rotas com JWT. Qual seria uma estrutura simples e segura para gerar o token no login e validar nas rotas privadas?",
@@ -29,7 +30,8 @@ const topicDetails = {
   "diferenca-entre-useeffect-e-uselayouteffect-no-react": {
     title: "Diferença entre useEffect e useLayoutEffect no React",
     author: "Pedro Oliveira",
-    time: "4h atrás",
+    lastInteractionHours: 4,
+    votes: 11,
     tags: ["React", "JavaScript"],
     content:
       "Em quais casos faz sentido usar useLayoutEffect no lugar de useEffect? Tenho dúvidas sobre impacto visual e performance.",
@@ -50,6 +52,19 @@ function fallbackTitleFromSlug(slug) {
     .filter(Boolean)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+}
+
+function formatLastInteraction(hours) {
+  if (hours === 0) {
+    return "agora";
+  }
+
+  if (hours < 24) {
+    return `há ${hours}h`;
+  }
+
+  const days = Math.floor(hours / 24);
+  return `há ${days}d`;
 }
 
 export default function Topic() {
@@ -76,7 +91,8 @@ export default function Topic() {
       topicDetails[topicSlug] || {
         title: fallbackTitleFromSlug(topicSlug || "forum"),
         author: "Comunidade DevEstudo",
-        time: "recentemente",
+        lastInteractionHours: 0,
+        votes: 0,
         tags: [],
         content: "Este fórum ainda não possui conteúdo carregado localmente.",
         replies: [],
@@ -123,13 +139,23 @@ export default function Topic() {
       ...topic,
       title,
       content,
-      time: "editado agora",
+      lastInteractionHours: 0,
     }));
     setIsEditingTopic(false);
   }
 
   function deleteReply(replyToDelete) {
     setReplies((currentReplies) => currentReplies.filter((reply) => reply !== replyToDelete));
+  }
+
+  function upvoteTopic() {
+    setCurrentTopic((topic) => ({ ...topic, votes: (topic.votes || 0) + 1 }));
+  }
+
+  function upvoteReply(replyToUpvote) {
+    setReplies((currentReplies) =>
+      currentReplies.map((reply) => (reply === replyToUpvote ? { ...reply, votes: reply.votes + 1 } : reply)),
+    );
   }
 
   return (
@@ -155,10 +181,16 @@ export default function Topic() {
         <p className="topic-meta">
           <span>por {currentTopic.author}</span>
           <span>•</span>
-          <span>{currentTopic.time}</span>
+          <span>Última interação {formatLastInteraction(currentTopic.lastInteractionHours)}</span>
           <span>•</span>
           <span>{replies.length} respostas</span>
         </p>
+
+        <button className="vote-button vote-button--inline" type="button" onClick={upvoteTopic}>
+          ▲
+          <strong>{currentTopic.votes || 0}</strong>
+          upvotes
+        </button>
 
         {currentTopic.tags.length > 0 && (
           <div className="chip-list topic-detail-tags">
@@ -206,7 +238,10 @@ export default function Topic() {
                   <p className="mini-meta">{reply.time}</p>
                 </div>
                 <div className="reply-actions">
-                  <span className="status-badge">{reply.votes} votos</span>
+                  <button className="vote-button vote-button--compact" type="button" onClick={() => upvoteReply(reply)}>
+                    ▲
+                    <strong>{reply.votes}</strong>
+                  </button>
                   {isAdmin && (
                     <Button className="btn--small" onClick={() => deleteReply(reply)}>
                       Excluir resposta

@@ -18,6 +18,17 @@
   margin-bottom: 16px;
 }
 
+.group-card-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.group-card-title-row h2 {
+  margin-bottom: 16px;
+}
+
 .group-meta {
   color: var(--muted);
   font-size: 14px;
@@ -43,6 +54,17 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
+}
+
+.groups-user-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.groups-user-header .btn {
+  min-width: 160px;
 }
 
 .groups-filter-bar {

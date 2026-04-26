@@ -128,6 +128,39 @@ const initialMentorRequests = [
   },
 ];
 
+function ratingToNumber(rating) {
+  return Number.parseFloat(String(rating).split(" ")[0]) || 0;
+}
+
+function StarRating({ value, onChange, readOnly = false }) {
+  return (
+    <div className="star-rating" aria-label={`Avaliação ${value} de 5`}>
+      {[1, 2, 3, 4, 5].map((star) => {
+        const isActive = star <= Math.round(value);
+        if (readOnly) {
+          return (
+            <span className={isActive ? "star star--active" : "star"} key={star}>
+              ★
+            </span>
+          );
+        }
+
+        return (
+          <button
+            className={isActive ? "star star--active" : "star"}
+            type="button"
+            key={star}
+            onClick={() => onChange(star)}
+            aria-label={`Avaliar com ${star} estrela${star > 1 ? "s" : ""}`}
+          >
+            ★
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function MentorStudents() {
   const [preferences, setPreferences] = useState({
     availability: "Noites e fins de semana",
@@ -553,6 +586,11 @@ export default function Mentors() {
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [requestedMentor, setRequestedMentor] = useState(null);
   const [studentMentorships, setStudentMentorships] = useState(initialMentorships);
+  const [mentorRatings, setMentorRatings] = useState(() =>
+    Object.fromEntries(mentors.map((mentor) => [mentor.name, ratingToNumber(mentor.rating)])),
+  );
+  const [feedbackMentor, setFeedbackMentor] = useState(mentors[0].name);
+  const [feedbackRating, setFeedbackRating] = useState(5);
 
   if (role === "admin") {
     return <AdminMentorshipManagement />;
@@ -613,7 +651,10 @@ export default function Mentors() {
               ))}
             </div>
             <div className="mentor-stats">
-              <strong>★ {mentor.rating}</strong>
+              <div className="mentor-rating-display">
+                <StarRating value={mentorRatings[mentor.name]} readOnly />
+                <strong>{mentorRatings[mentor.name].toFixed(1)} / 5.0</strong>
+              </div>
               <span className="soft">{mentor.sessions}</span>
               <span>
                 Disponível: <span>{mentor.availability}</span>
@@ -628,8 +669,33 @@ export default function Mentors() {
       </div>
 
       <section className="card wide-card">
-        <h2 style={{ fontSize: 20, marginBottom: 24 }}>Avaliar Mentoria</h2>
-        <Button>Deixar Feedback</Button>
+        <h2 style={{ fontSize: 20, marginBottom: 10 }}>Avaliar Mentoria</h2>
+        <p className="page-subtitle">Registre uma nota para uma mentoria concluída.</p>
+        <form
+          className="mentor-feedback-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setMentorRatings((currentRatings) => ({ ...currentRatings, [feedbackMentor]: feedbackRating }));
+          }}
+        >
+          <div className="input-group">
+            <label>Mentor</label>
+            <select value={feedbackMentor} onChange={(e) => setFeedbackMentor(e.target.value)}>
+              {mentors.map((mentor) => (
+                <option key={mentor.name}>{mentor.name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <p className="field-label" style={{ marginBottom: 8 }}>
+              Nota
+            </p>
+            <StarRating value={feedbackRating} onChange={setFeedbackRating} />
+          </div>
+          <Button className="btn--primary" type="submit">
+            Salvar avaliação
+          </Button>
+        </form>
       </section>
 
       {selectedMentor && (

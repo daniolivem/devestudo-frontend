@@ -10,6 +10,7 @@ const groups = [
     time: "Noite",
     description: "Estudo aprofundado de hooks customizados e otimização",
     tags: ["React", "Avançado"],
+    createdByCurrentMentor: true,
   },
   {
     title: "JavaScript para Iniciantes",
@@ -17,6 +18,7 @@ const groups = [
     time: "Tarde",
     description: "Fundamentos da linguagem e primeiros projetos",
     tags: ["JavaScript", "Iniciante"],
+    createdByCurrentMentor: false,
   },
   {
     title: "Node.js e APIs REST",
@@ -24,6 +26,7 @@ const groups = [
     time: "Noite",
     description: "Desenvolvimento de APIs escaláveis com Express",
     tags: ["Node.js", "Intermediário"],
+    createdByCurrentMentor: true,
   },
   {
     title: "Python para Data Science",
@@ -31,6 +34,7 @@ const groups = [
     time: "Fins de semana",
     description: "Pandas, NumPy e visualização de dados",
     tags: ["Python", "Intermediário"],
+    createdByCurrentMentor: false,
   },
   {
     title: "TypeScript do Zero",
@@ -38,6 +42,7 @@ const groups = [
     time: "Manhã",
     description: "Tipagem estática e boas práticas",
     tags: ["TypeScript", "Iniciante"],
+    createdByCurrentMentor: false,
   },
   {
     title: "Java Spring Boot",
@@ -45,6 +50,7 @@ const groups = [
     time: "Noite",
     description: "Desenvolvimento enterprise com Spring Framework",
     tags: ["Java", "Avançado"],
+    createdByCurrentMentor: false,
   },
   {
     title: "Vue.js Essencial",
@@ -52,6 +58,7 @@ const groups = [
     time: "Tarde",
     description: "Composition API e gerenciamento de estado",
     tags: ["Vue", "Intermediário"],
+    createdByCurrentMentor: false,
   },
   {
     title: "Algoritmos e Estruturas de Dados",
@@ -59,12 +66,15 @@ const groups = [
     time: "Fins de semana",
     description: "Preparação para entrevistas técnicas",
     tags: ["JavaScript", "Intermediário"],
+    createdByCurrentMentor: false,
   },
 ];
 
 export default function Groups() {
   const [searchParams] = useSearchParams();
-  const isAdmin = searchParams.get("role") === "admin";
+  const role = searchParams.get("role");
+  const isAdmin = role === "admin";
+  const isMentor = role === "mentor";
   const [requestedGroup, setRequestedGroup] = useState(null);
   const [managedGroups, setManagedGroups] = useState(groups);
   const [editingGroup, setEditingGroup] = useState(null);
@@ -89,6 +99,7 @@ export default function Groups() {
       time: time || "A definir",
       description,
       tags: [technology || "Geral", level || "Aberto"],
+      createdByCurrentMentor: isMentor || Boolean(editingGroup?.createdByCurrentMentor),
     };
 
     setManagedGroups((currentGroups) => {
@@ -237,7 +248,19 @@ export default function Groups() {
   return (
     <Layout>
       <header className="page-header">
-        <h1 className="page-title">Busca e Gestão de Grupos</h1>
+        <div className="groups-user-header">
+          <div>
+            <h1 className="page-title">{isMentor ? "Meus Grupos e Comunidades" : "Busca e Gestão de Grupos"}</h1>
+            {isMentor && (
+              <p className="page-subtitle">Crie grupos, gerencie os seus e solicite entrada em outros grupos.</p>
+            )}
+          </div>
+          {isMentor && (
+            <Button className="btn--primary" onClick={() => setEditingGroup({ createdByCurrentMentor: true })}>
+              Criar grupo
+            </Button>
+          )}
+        </div>
       </header>
 
       <section className="card filter-bar" aria-label="Filtros de grupos">
@@ -258,7 +281,10 @@ export default function Groups() {
       <div className="grid-2">
         {managedGroups.map((group) => (
           <article className="card group-card" key={group.title}>
-            <h2>{group.title}</h2>
+            <div className="group-card-title-row">
+              <h2>{group.title}</h2>
+              {isMentor && group.createdByCurrentMentor && <span className="status-badge">Criado por você</span>}
+            </div>
             <p className="group-meta">
               {group.members} membros <span style={{ margin: "0 12px" }}>•</span> {group.time}
             </p>
@@ -270,10 +296,10 @@ export default function Groups() {
                 </span>
               ))}
             </div>
-            {isAdmin ? (
+            {isMentor && group.createdByCurrentMentor ? (
               <div className="group-actions">
-                <Button>Editar</Button>
-                <Button>Excluir</Button>
+                <Button onClick={() => setEditingGroup(group)}>Editar</Button>
+                <Button onClick={() => handleDeleteGroup(group.title)}>Excluir</Button>
               </div>
             ) : (
               <Button className="full-button" onClick={() => setRequestedGroup(group)}>
@@ -283,6 +309,67 @@ export default function Groups() {
           </article>
         ))}
       </div>
+
+      {isMentor && editingGroup && (
+        <div className="modal-backdrop" role="presentation" onClick={() => setEditingGroup(null)}>
+          <section
+            className="card modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mentor-group-edit-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <div>
+                <h2 id="mentor-group-edit-title">{editingGroup.title ? "Editar meu grupo" : "Criar grupo"}</h2>
+                <p className="page-subtitle">Mentores podem gerenciar apenas os grupos criados por eles.</p>
+              </div>
+            </div>
+
+            <form className="modal-form" onSubmit={handleSaveGroup}>
+              <input type="hidden" name="originalTitle" value={editingGroup.title || ""} />
+
+              <div className="input-group">
+                <label>Nome</label>
+                <input name="title" defaultValue={editingGroup.title || ""} placeholder="Ex: React Hooks Avançados" />
+              </div>
+
+              <div className="input-group">
+                <label>Descrição</label>
+                <textarea
+                  name="description"
+                  defaultValue={editingGroup.description || ""}
+                  placeholder="Descreva o objetivo do grupo"
+                  rows="4"
+                />
+              </div>
+
+              <div className="grid-2">
+                <div className="input-group">
+                  <label>Tecnologia</label>
+                  <input name="technology" defaultValue={editingGroup.tags?.[0] || ""} placeholder="React" />
+                </div>
+                <div className="input-group">
+                  <label>Nível</label>
+                  <input name="level" defaultValue={editingGroup.tags?.[1] || ""} placeholder="Intermediário" />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Disponibilidade</label>
+                <input name="time" defaultValue={editingGroup.time || ""} placeholder="Noite" />
+              </div>
+
+              <div className="modal-actions">
+                <Button onClick={() => setEditingGroup(null)}>Cancelar</Button>
+                <Button className="btn--primary" type="submit">
+                  Salvar
+                </Button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
 
       {requestedGroup && (
         <div className="modal-backdrop" role="presentation" onClick={() => setRequestedGroup(null)}>

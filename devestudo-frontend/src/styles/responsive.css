@@ -57,6 +57,8 @@
 
   .forum-header,
   .groups-admin-header,
+  .groups-user-header,
+  .group-card-title-row,
   .mentors-admin-header,
   .modal-header,
   .modal-actions,
@@ -76,10 +78,45 @@
   .admin-group-row,
   .admin-mentor-row,
   .profile-actions,
-  .admin-list-row,
-  .mentorship-row {
+  .admin-list-row {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+
+  .mentorship-row {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 12px;
+    padding: 14px 0;
+  }
+
+  .mentorship-row > .status-badge {
+    width: auto;
+    justify-self: start;
+    align-self: start;
+  }
+
+  .mentorship-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .mentorship-actions .btn {
+    flex: 1 1 130px;
+  }
+
+  .mentorship-status-panel,
+  .admin-mentors-panel {
+    padding: 14px;
+  }
+
+  .mentorship-section-header h2 {
+    font-size: 18px;
+  }
+
+  .mentors-admin-header .btn {
+    min-width: 0;
+    align-self: flex-start;
   }
 
   .checkbox-grid {
