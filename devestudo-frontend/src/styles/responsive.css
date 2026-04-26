@@ -41,6 +41,7 @@
   }
 
   .grid-2,
+  .dashboard-grid,
   .stats-row,
   .filter-bar {
     grid-template-columns: 1fr;

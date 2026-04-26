@@ -138,7 +138,7 @@ export default function Dashboard() {
         <p className="page-subtitle">Confira suas atividades e recomendações personalizadas</p>
       </header>
 
-      <div className="grid-2">
+      <div className="dashboard-grid">
         <section className="card dashboard-card">
           <h2>Meus Grupos</h2>
           <div className="list-divider">
@@ -180,27 +180,27 @@ export default function Dashboard() {
           </div>
           <Button className="full-button">Ir para o Fórum</Button>
         </section>
-      </div>
 
-      <section className="mentors-home">
-        <h2 style={{ fontSize: 16, marginBottom: 14 }}>Mentores Disponíveis</h2>
-        <div className="list-divider">
-          {mentors.map((mentor) => (
-            <article className="mentor-home-item" key={mentor.name}>
-              <p className="mini-title">{mentor.name}</p>
-              <div className="chip-list" style={{ marginTop: 10 }}>
-                {mentor.tags.map((tag) => (
-                  <span className="chip" key={tag}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <p className="mentor-rating">★ {mentor.rating}</p>
-            </article>
-          ))}
-        </div>
-        <Button className="full-button">Ver todos os mentores</Button>
-      </section>
+        <section className="card dashboard-card">
+          <h2>Mentores Disponíveis</h2>
+          <div className="list-divider">
+            {mentors.map((mentor) => (
+              <article className="mentor-home-item" key={mentor.name}>
+                <p className="mini-title">{mentor.name}</p>
+                <div className="chip-list" style={{ marginTop: 10 }}>
+                  {mentor.tags.map((tag) => (
+                    <span className="chip" key={tag}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <p className="mentor-rating">★ {mentor.rating}</p>
+              </article>
+            ))}
+          </div>
+          <Button className="full-button">Ver todos os mentores</Button>
+        </section>
+      </div>
     </Layout>
   );
 }

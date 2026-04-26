@@ -55,8 +55,8 @@
 }
 
 .page {
+  flex: 1;
   width: 100%;
-  max-width: 980px;
   padding: 36px 32px 56px;
 }
 

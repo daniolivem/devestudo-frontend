@@ -1,3 +1,9 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  gap: 22px;
+}
+
 .dashboard-card {
   min-height: 540px;
   padding: 18px;
@@ -41,11 +47,6 @@
   color: #333333;
   font-size: 12px;
   font-weight: 700;
-}
-
-.mentors-home {
-  margin-top: 24px;
-  max-width: 380px;
 }
 
 .mentor-home-item {
