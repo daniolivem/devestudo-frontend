@@ -37,3 +37,110 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 32px;
 }
+
+.groups-admin-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.groups-filter-bar {
+  align-items: end;
+}
+
+.admin-groups-panel {
+  padding: 18px;
+}
+
+.admin-groups-head,
+.admin-group-row {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) 90px 150px 150px;
+  gap: 18px;
+  align-items: center;
+}
+
+.admin-groups-head {
+  padding: 0 0 12px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.admin-group-row {
+  padding: 18px 0;
+}
+
+.admin-group-row h2 {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.admin-group-row p {
+  max-width: 620px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+
+.admin-group-row > strong {
+  font-size: 18px;
+}
+
+.admin-group-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+  .admin-groups-panel {
+    padding: 14px;
+  }
+
+  .admin-groups-head {
+    display: none;
+  }
+
+  .admin-group-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 20px 0;
+  }
+
+  .admin-group-row h2 {
+    font-size: 18px;
+  }
+
+  .admin-group-row > strong,
+  .admin-group-row > .group-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .admin-group-row > strong::before {
+    content: "Membros:";
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .admin-group-row > .group-meta::before {
+    content: "Disponibilidade:";
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .admin-group-actions {
+    justify-content: stretch;
+  }
+
+  .admin-group-actions .btn {
+    flex: 1;
+  }
+}

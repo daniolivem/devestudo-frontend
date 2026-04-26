@@ -66,6 +66,173 @@ export default function Groups() {
   const [searchParams] = useSearchParams();
   const isAdmin = searchParams.get("role") === "admin";
   const [requestedGroup, setRequestedGroup] = useState(null);
+  const [managedGroups, setManagedGroups] = useState(groups);
+  const [editingGroup, setEditingGroup] = useState(null);
+
+  function handleSaveGroup(e) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const originalTitle = String(formData.get("originalTitle") || "");
+    const title = String(formData.get("title") || "").trim();
+    const description = String(formData.get("description") || "").trim();
+    const technology = String(formData.get("technology") || "").trim();
+    const level = String(formData.get("level") || "").trim();
+    const time = String(formData.get("time") || "").trim();
+
+    if (!title || !description) {
+      return;
+    }
+
+    const savedGroup = {
+      title,
+      members: editingGroup?.members || 0,
+      time: time || "A definir",
+      description,
+      tags: [technology || "Geral", level || "Aberto"],
+    };
+
+    setManagedGroups((currentGroups) => {
+      if (!originalTitle) {
+        return [savedGroup, ...currentGroups];
+      }
+
+      return currentGroups.map((group) => (group.title === originalTitle ? savedGroup : group));
+    });
+    setEditingGroup(null);
+  }
+
+  function handleDeleteGroup(groupTitle) {
+    setManagedGroups((currentGroups) => currentGroups.filter((group) => group.title !== groupTitle));
+  }
+
+  if (isAdmin) {
+    return (
+      <Layout>
+        <header className="page-header groups-admin-header">
+          <div>
+            <h1 className="page-title">Gestão de Grupos</h1>
+            <p className="page-subtitle">Gerencie grupos, dados de exibição e disponibilidade para os alunos.</p>
+          </div>
+          <Button className="btn--primary" onClick={() => setEditingGroup({})}>
+            Criar grupo
+          </Button>
+        </header>
+
+        <section className="card filter-bar groups-filter-bar" aria-label="Filtros de grupos">
+          <div className="input-group">
+            <label>Tecnologia</label>
+            <input placeholder="React, Node.js, Python..." />
+          </div>
+          <div className="input-group">
+            <label>Nível</label>
+            <input placeholder="Iniciante, intermediário..." />
+          </div>
+          <div className="input-group">
+            <label>Disponibilidade</label>
+            <input placeholder="Manhã, tarde, noite..." />
+          </div>
+        </section>
+
+        <section className="card admin-groups-panel">
+          <div className="admin-groups-head">
+            <span>Grupo</span>
+            <span>Membros</span>
+            <span>Disponibilidade</span>
+            <span>Ações</span>
+          </div>
+
+          <div className="list-divider">
+            {managedGroups.map((group) => (
+              <article className="admin-group-row" key={group.title}>
+                <div>
+                  <h2>{group.title}</h2>
+                  <p>{group.description}</p>
+                  <div className="chip-list">
+                    {group.tags.map((tag) => (
+                      <span className="chip" key={tag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <strong>{group.members}</strong>
+                <span className="group-meta">{group.time}</span>
+                <div className="admin-group-actions">
+                  <Button className="btn--small" onClick={() => setEditingGroup(group)}>
+                    Editar
+                  </Button>
+                  <Button className="btn--small" onClick={() => handleDeleteGroup(group.title)}>
+                    Excluir
+                  </Button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {editingGroup && (
+          <div className="modal-backdrop" role="presentation" onClick={() => setEditingGroup(null)}>
+            <section
+              className="card modal-card"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="group-edit-title"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="modal-header">
+                <div>
+                  <h2 id="group-edit-title">{editingGroup.title ? "Editar grupo" : "Criar grupo"}</h2>
+                  <p className="page-subtitle">Informe os dados do grupo</p>
+                </div>
+              </div>
+
+              <form className="modal-form" onSubmit={handleSaveGroup}>
+                <input type="hidden" name="originalTitle" value={editingGroup.title || ""} />
+
+                <div className="input-group">
+                  <label>Nome</label>
+                  <input name="title" defaultValue={editingGroup.title || ""} placeholder="Ex: React Hooks Avançados" />
+                </div>
+
+                <div className="input-group">
+                  <label>Descrição</label>
+                  <textarea
+                    name="description"
+                    defaultValue={editingGroup.description || ""}
+                    placeholder="Descreva o objetivo do grupo"
+                    rows="4"
+                  />
+                </div>
+
+                <div className="grid-2">
+                  <div className="input-group">
+                    <label>Tecnologia</label>
+                    <input name="technology" defaultValue={editingGroup.tags?.[0] || ""} placeholder="React" />
+                  </div>
+                  <div className="input-group">
+                    <label>Nível</label>
+                    <input name="level" defaultValue={editingGroup.tags?.[1] || ""} placeholder="Intermediário" />
+                  </div>
+                </div>
+
+                <div className="input-group">
+                  <label>Disponibilidade</label>
+                  <input name="time" defaultValue={editingGroup.time || ""} placeholder="Noite" />
+                </div>
+
+                <div className="modal-actions">
+                  <Button onClick={() => setEditingGroup(null)}>Cancelar</Button>
+                  <Button className="btn--primary" type="submit">
+                    Salvar
+                  </Button>
+                </div>
+              </form>
+            </section>
+          </div>
+        )}
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -89,7 +256,7 @@ export default function Groups() {
       </section>
 
       <div className="grid-2">
-        {groups.map((group) => (
+        {managedGroups.map((group) => (
           <article className="card group-card" key={group.title}>
             <h2>{group.title}</h2>
             <p className="group-meta">

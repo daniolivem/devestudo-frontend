@@ -271,6 +271,282 @@ function MentorStudents() {
   );
 }
 
+function AdminMentorshipManagement() {
+  const [mentorRequests, setMentorRequests] = useState(initialMentorRequests);
+  const [managedMentors, setManagedMentors] = useState(mentors);
+  const [editingMentor, setEditingMentor] = useState(null);
+  const [adminPreferences, setAdminPreferences] = useState({
+    availability: "Tardes e noites",
+    channel: "Google Meet",
+    format: "Sessões individuais de 45 minutos",
+    instructions: "Envie contexto, links e objetivo da conversa antes da sessão.",
+  });
+  const [isPreferencesSaved, setIsPreferencesSaved] = useState(false);
+
+  function updateRequestStatus(requestId, status) {
+    setMentorRequests((currentRequests) =>
+      currentRequests.map((request) => (request.id === requestId ? { ...request, status } : request)),
+    );
+  }
+
+  function handleMentorSave(e) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const originalName = String(formData.get("originalName") || "");
+    const name = String(formData.get("name") || "").trim();
+    const role = String(formData.get("role") || "").trim();
+    const tags = String(formData.get("tags") || "")
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+    const availability = String(formData.get("availability") || "").trim();
+    const channel = String(formData.get("channel") || "").trim();
+    const format = String(formData.get("format") || "").trim();
+    const instructions = String(formData.get("instructions") || "").trim();
+
+    if (!name || !role) {
+      return;
+    }
+
+    const savedMentor = {
+      name,
+      role,
+      tags,
+      rating: editingMentor?.rating || "Novo",
+      sessions: editingMentor?.sessions || "0 sessões realizadas",
+      availability,
+      channel,
+      format,
+      instructions,
+    };
+
+    setManagedMentors((currentMentors) => {
+      if (!originalName) {
+        return [savedMentor, ...currentMentors];
+      }
+
+      return currentMentors.map((mentor) => (mentor.name === originalName ? savedMentor : mentor));
+    });
+    setEditingMentor(null);
+  }
+
+  function handleAdminPreferencesSubmit(e) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    setAdminPreferences({
+      availability: String(formData.get("availability") || "").trim(),
+      channel: String(formData.get("channel") || "").trim(),
+      format: String(formData.get("format") || "").trim(),
+      instructions: String(formData.get("instructions") || "").trim(),
+    });
+    setIsPreferencesSaved(true);
+  }
+
+  function deleteMentor(mentorName) {
+    setManagedMentors((currentMentors) => currentMentors.filter((mentor) => mentor.name !== mentorName));
+  }
+
+  return (
+    <Layout>
+      <header className="page-header mentors-admin-header">
+        <div>
+          <h1 className="page-title">Gestão de Mentoria</h1>
+          <p className="page-subtitle">Gerencie solicitações, mentores cadastrados e suas preferências como mentor.</p>
+        </div>
+        <Button className="btn--primary" onClick={() => setEditingMentor({})}>
+          Cadastrar mentor
+        </Button>
+      </header>
+
+      <section className="card mentorship-status-panel">
+        <div className="mentorship-section-header">
+          <div>
+            <h2>Solicitações de mentoria</h2>
+            <p className="page-subtitle">Controle aprovações, recusas e acompanhamento dos pedidos.</p>
+          </div>
+        </div>
+
+        <div className="mentorship-list-scroll list-divider">
+          {mentorRequests.map((request) => (
+            <article className="mentorship-row" key={request.id}>
+              <div>
+                <h3>{request.studentName}</h3>
+                <p className="mini-meta">{request.topic}</p>
+                <p className="mentorship-message">{request.message}</p>
+              </div>
+
+              <span className="status-badge">{mentorshipStatus[request.status].label}</span>
+
+              {request.status === "REQUESTED" ? (
+                <div className="mentorship-actions">
+                  <Button className="btn--primary btn--small" onClick={() => updateRequestStatus(request.id, "APPROVED")}>
+                    Aprovar
+                  </Button>
+                  <Button className="btn--small" onClick={() => updateRequestStatus(request.id, "CANCELLED")}>
+                    Recusar
+                  </Button>
+                </div>
+              ) : (
+                <p className="mini-meta">{mentorshipStatus[request.status].description}</p>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="card admin-mentors-panel">
+        <div className="mentorship-section-header">
+          <div>
+            <h2>Mentores cadastrados</h2>
+            <p className="page-subtitle">Edite disponibilidade, canais, stacks e remova cadastros quando necessário.</p>
+          </div>
+        </div>
+
+        <div className="admin-mentors-head">
+          <span>Mentor</span>
+          <span>Disponibilidade</span>
+          <span>Canal</span>
+          <span>Ações</span>
+        </div>
+
+        <div className="list-divider">
+          {managedMentors.map((mentor) => (
+            <article className="admin-mentor-row" key={mentor.name}>
+              <div>
+                <h3>{mentor.name}</h3>
+                <p className="mini-meta">{mentor.role}</p>
+                <div className="chip-list">
+                  {mentor.tags.map((tag) => (
+                    <span className="chip" key={tag}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <span>{mentor.availability}</span>
+              <span>{mentor.channel}</span>
+              <div className="mentorship-actions">
+                <Button className="btn--small" onClick={() => setEditingMentor(mentor)}>
+                  Editar
+                </Button>
+                <Button className="btn--small" onClick={() => deleteMentor(mentor.name)}>
+                  Remover
+                </Button>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="card wide-card">
+        <h2 style={{ fontSize: 20, marginBottom: 10 }}>Minhas preferências como mentor</h2>
+        <p className="page-subtitle">
+          Como administradores também podem atuar como mentores, estes dados aparecem para alunos que solicitarem sua
+          mentoria.
+        </p>
+
+        <form className="mentor-preferences-form" onSubmit={handleAdminPreferencesSubmit}>
+          <div className="grid-2">
+            <div className="input-group">
+              <label>Disponibilidade</label>
+              <input name="availability" defaultValue={adminPreferences.availability} />
+            </div>
+            <div className="input-group">
+              <label>Canal da sessão</label>
+              <input name="channel" defaultValue={adminPreferences.channel} />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label>Formato</label>
+            <input name="format" defaultValue={adminPreferences.format} />
+          </div>
+
+          <div className="input-group">
+            <label>Orientações para o aluno</label>
+            <textarea name="instructions" defaultValue={adminPreferences.instructions} rows="5" />
+          </div>
+
+          <div className="mentor-preferences-actions">
+            {isPreferencesSaved && <span className="status-badge">Preferências salvas</span>}
+            <Button className="btn--primary" type="submit">
+              Salvar preferências
+            </Button>
+          </div>
+        </form>
+      </section>
+
+      {editingMentor && (
+        <div className="modal-backdrop" role="presentation" onClick={() => setEditingMentor(null)}>
+          <section
+            className="card modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mentor-edit-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <div>
+                <h2 id="mentor-edit-title">{editingMentor.name ? "Editar mentor" : "Cadastrar mentor"}</h2>
+                <p className="page-subtitle">Atualize os dados exibidos para os alunos.</p>
+              </div>
+            </div>
+
+            <form className="modal-form" onSubmit={handleMentorSave}>
+              <input type="hidden" name="originalName" value={editingMentor.name || ""} />
+
+              <div className="grid-2">
+                <div className="input-group">
+                  <label>Nome</label>
+                  <input name="name" defaultValue={editingMentor.name || ""} />
+                </div>
+                <div className="input-group">
+                  <label>Área</label>
+                  <input name="role" defaultValue={editingMentor.role || ""} />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Tecnologias</label>
+                <input name="tags" defaultValue={editingMentor.tags?.join(", ") || ""} placeholder="React, Node.js, Docker" />
+              </div>
+
+              <div className="grid-2">
+                <div className="input-group">
+                  <label>Disponibilidade</label>
+                  <input name="availability" defaultValue={editingMentor.availability || ""} />
+                </div>
+                <div className="input-group">
+                  <label>Canal</label>
+                  <input name="channel" defaultValue={editingMentor.channel || ""} />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Formato</label>
+                <input name="format" defaultValue={editingMentor.format || ""} />
+              </div>
+
+              <div className="input-group">
+                <label>Orientações</label>
+                <textarea name="instructions" defaultValue={editingMentor.instructions || ""} rows="5" />
+              </div>
+
+              <div className="modal-actions">
+                <Button onClick={() => setEditingMentor(null)}>Cancelar</Button>
+                <Button className="btn--primary" type="submit">
+                  Salvar
+                </Button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
+    </Layout>
+  );
+}
+
 export default function Mentors() {
   const [searchParams] = useSearchParams();
   const role = searchParams.get("role");
@@ -278,7 +554,11 @@ export default function Mentors() {
   const [requestedMentor, setRequestedMentor] = useState(null);
   const [studentMentorships, setStudentMentorships] = useState(initialMentorships);
 
-  if (role === "admin" || role === "mentor") {
+  if (role === "admin") {
+    return <AdminMentorshipManagement />;
+  }
+
+  if (role === "mentor") {
     return <MentorStudents />;
   }
 

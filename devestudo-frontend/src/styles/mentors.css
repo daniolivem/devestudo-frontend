@@ -126,3 +126,79 @@
   display: grid;
   gap: 8px;
 }
+
+.mentors-admin-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.admin-mentors-panel {
+  margin-bottom: 28px;
+  padding: 20px;
+}
+
+.admin-mentors-head,
+.admin-mentor-row {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 180px 170px 150px;
+  gap: 18px;
+  align-items: center;
+}
+
+.admin-mentors-head {
+  padding-bottom: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.admin-mentor-row {
+  padding: 18px 0;
+}
+
+.admin-mentor-row h3 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.admin-mentor-row .chip-list {
+  margin-top: 10px;
+}
+
+.admin-mentor-row > span {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .admin-mentors-head {
+    display: none;
+  }
+
+  .admin-mentor-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .admin-mentor-row > span {
+    display: inline-flex;
+    gap: 6px;
+  }
+
+  .admin-mentor-row > span:nth-of-type(1)::before {
+    content: "Disponibilidade:";
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .admin-mentor-row > span:nth-of-type(2)::before {
+    content: "Canal:";
+    color: var(--muted);
+    font-weight: 700;
+  }
+}
