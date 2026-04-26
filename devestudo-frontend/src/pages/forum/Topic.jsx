@@ -93,6 +93,7 @@ export default function Topic() {
         author: "Comunidade DevEstudo",
         lastInteractionHours: 0,
         votes: 0,
+        hasVoted: false,
         tags: [],
         content: "Este fórum ainda não possui conteúdo carregado localmente.",
         replies: [],
@@ -120,6 +121,7 @@ export default function Topic() {
         time: "agora",
         content,
         votes: 0,
+        hasVoted: false,
       },
     ]);
     e.currentTarget.reset();
@@ -149,12 +151,16 @@ export default function Topic() {
   }
 
   function upvoteTopic() {
-    setCurrentTopic((topic) => ({ ...topic, votes: (topic.votes || 0) + 1 }));
+    setCurrentTopic((topic) =>
+      topic.hasVoted ? topic : { ...topic, votes: (topic.votes || 0) + 1, hasVoted: true },
+    );
   }
 
   function upvoteReply(replyToUpvote) {
     setReplies((currentReplies) =>
-      currentReplies.map((reply) => (reply === replyToUpvote ? { ...reply, votes: reply.votes + 1 } : reply)),
+      currentReplies.map((reply) =>
+        reply === replyToUpvote && !reply.hasVoted ? { ...reply, votes: reply.votes + 1, hasVoted: true } : reply,
+      ),
     );
   }
 
@@ -186,10 +192,15 @@ export default function Topic() {
           <span>{replies.length} respostas</span>
         </p>
 
-        <button className="vote-button vote-button--inline" type="button" onClick={upvoteTopic}>
+        <button
+          className={currentTopic.hasVoted ? "vote-button vote-button--inline vote-button--voted" : "vote-button vote-button--inline"}
+          type="button"
+          disabled={currentTopic.hasVoted}
+          onClick={upvoteTopic}
+        >
           ▲
           <strong>{currentTopic.votes || 0}</strong>
-          upvotes
+          {currentTopic.hasVoted ? "votado" : "upvotes"}
         </button>
 
         {currentTopic.tags.length > 0 && (
@@ -238,9 +249,15 @@ export default function Topic() {
                   <p className="mini-meta">{reply.time}</p>
                 </div>
                 <div className="reply-actions">
-                  <button className="vote-button vote-button--compact" type="button" onClick={() => upvoteReply(reply)}>
+                  <button
+                    className={reply.hasVoted ? "vote-button vote-button--compact vote-button--voted" : "vote-button vote-button--compact"}
+                    type="button"
+                    disabled={reply.hasVoted}
+                    onClick={() => upvoteReply(reply)}
+                  >
                     ▲
                     <strong>{reply.votes}</strong>
+                    {reply.hasVoted && <span>Votado</span>}
                   </button>
                   {isAdmin && (
                     <Button className="btn--small" onClick={() => deleteReply(reply)}>

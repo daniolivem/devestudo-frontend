@@ -68,6 +68,16 @@
   border-color: #999999;
 }
 
+.vote-button:disabled {
+  cursor: default;
+}
+
+.vote-button--voted {
+  border-color: var(--black);
+  background: var(--black);
+  color: var(--white);
+}
+
 .vote-button--inline {
   margin-top: 18px;
 }

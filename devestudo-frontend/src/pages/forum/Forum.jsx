@@ -135,6 +135,7 @@ export default function Forum() {
       lastInteractionHours: 0,
       replies: 0,
       votes: 0,
+      hasVoted: false,
       tags: selectedTags,
       createdByCurrentMentor: isMentor,
     };
@@ -179,7 +180,9 @@ export default function Forum() {
 
   function upvoteTopic(topicTitle) {
     setForumTopics((currentTopics) =>
-      currentTopics.map((topic) => (topic.title === topicTitle ? { ...topic, votes: topic.votes + 1 } : topic)),
+      currentTopics.map((topic) =>
+        topic.title === topicTitle && !topic.hasVoted ? { ...topic, votes: topic.votes + 1, hasVoted: true } : topic,
+      ),
     );
   }
 
@@ -253,8 +256,9 @@ export default function Forum() {
             </div>
             <div className="topic-side">
               <button
-                className="vote-button"
+                className={topic.hasVoted ? "vote-button vote-button--voted" : "vote-button"}
                 type="button"
+                disabled={topic.hasVoted}
                 onClick={(e) => {
                   e.stopPropagation();
                   upvoteTopic(topic.title);
@@ -263,6 +267,7 @@ export default function Forum() {
               >
                 ▲
                 <strong>{topic.votes}</strong>
+                {topic.hasVoted && <span>Votado</span>}
               </button>
             {isAdmin || (isMentor && topic.createdByCurrentMentor) ? (
               <div className="forum-admin-actions">
