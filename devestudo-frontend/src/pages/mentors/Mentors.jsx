@@ -298,7 +298,7 @@ export default function Mentors() {
         </div>
 
         {studentMentorships.length > 0 ? (
-          <div className="list-divider">
+          <div className="mentorship-list-scroll list-divider">
             {studentMentorships.map((mentorship) => (
               <article className="mentorship-row" key={`${mentorship.mentorName}-${mentorship.status}`}>
                 <div>

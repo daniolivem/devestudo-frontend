@@ -84,6 +84,12 @@
   padding: 20px;
 }
 
+.mentorship-list-scroll {
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
 .mentorship-section-header {
   display: flex;
   align-items: flex-start;
