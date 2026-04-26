@@ -2,11 +2,14 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
+import Pagination from "../../components/ui/Pagination";
 import TopicCard from "../../components/forum/TopicCard";
 import TopicFormModal from "../../components/forum/TopicFormModal";
 import { useForumTopics } from "../../hooks/useForumTopics";
 import { forumTags } from "../../services/forumService";
 import { createTopicSlug } from "../../utils/forum";
+
+const itemsPerPage = 10;
 
 export default function Forum() {
   const navigate = useNavigate();
@@ -17,7 +20,10 @@ export default function Forum() {
   const roleQuery = role === "admin" || role === "mentor" ? `?role=${role}` : "";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [topicBeingEdited, setTopicBeingEdited] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const { topics, createTopic, updateTopic, deleteTopic, upvoteTopic } = useForumTopics();
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const visibleTopics = isAdmin ? topics.slice(startIndex, startIndex + itemsPerPage) : topics;
 
   function openTopic(topic) {
     navigate(`/forum/${createTopicSlug(topic.title)}${roleQuery}`, { state: { topic } });
@@ -37,6 +43,7 @@ export default function Forum() {
     };
 
     createTopic(newTopic);
+    setCurrentPage(1);
     setIsModalOpen(false);
     openTopic(newTopic);
   }
@@ -48,6 +55,13 @@ export default function Forum() {
       tags: topicPayload.tags,
     });
     setTopicBeingEdited(null);
+  }
+
+  function handleDeleteTopic(topicTitle) {
+    const nextTotal = topics.length - 1;
+    const nextTotalPages = Math.max(1, Math.ceil(nextTotal / itemsPerPage));
+    deleteTopic(topicTitle);
+    setCurrentPage((page) => Math.min(page, nextTotalPages));
   }
 
   return (
@@ -79,7 +93,7 @@ export default function Forum() {
       </div>
 
       <div className="stack">
-        {topics.map((topic) => (
+        {visibleTopics.map((topic) => (
           <TopicCard
             key={topic.title}
             topic={topic}
@@ -87,11 +101,21 @@ export default function Forum() {
             isMentor={isMentor}
             onOpen={openTopic}
             onEdit={setTopicBeingEdited}
-            onDelete={deleteTopic}
+            onDelete={handleDeleteTopic}
             onUpvote={upvoteTopic}
           />
         ))}
       </div>
+
+      {isAdmin && (
+        <Pagination
+          currentPage={currentPage}
+          totalItems={topics.length}
+          itemsPerPage={itemsPerPage}
+          itemLabel="fóruns"
+          onPageChange={setCurrentPage}
+        />
+      )}
 
       {isModalOpen && (
         <TopicFormModal

@@ -10,6 +10,7 @@ import Mentors from "../pages/mentors/Mentors";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import Register from "../pages/auth/Register";
 import Profile from "../pages/profile/Profile";
+import Users from "../pages/users/Users";
 
 export default function AppRoutes() {
   return (
@@ -23,6 +24,7 @@ export default function AppRoutes() {
         <Route path="/groups" element={<Groups />} />
         <Route path="/mentors" element={<Mentors />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/users" element={<Users />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/register" element={<Register />} />
       </Routes>

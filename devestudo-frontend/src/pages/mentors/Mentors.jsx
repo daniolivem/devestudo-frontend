@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
+import Pagination from "../../components/ui/Pagination";
 import MentorCard from "../../components/mentorship/MentorCard";
 import MentorshipRequestModal from "../../components/mentorship/MentorshipRequestModal";
 import StarRating from "../../components/mentorship/StarRating";
@@ -13,6 +14,8 @@ import {
   ratingToNumber,
   students,
 } from "../../services/mentorshipService";
+
+const itemsPerPage = 10;
 
 function MentorStudents() {
   const [mentorRequests, setMentorRequests] = useState(initialMentorRequests);
@@ -116,6 +119,12 @@ function AdminMentorshipManagement() {
   const [mentorRequests, setMentorRequests] = useState(initialMentorRequests);
   const [managedMentors, setManagedMentors] = useState(() => mentors.map((mentor) => ({ ...mentor, isBlocked: false })));
   const [editingMentor, setEditingMentor] = useState(null);
+  const [requestsPage, setRequestsPage] = useState(1);
+  const [mentorsPage, setMentorsPage] = useState(1);
+  const requestsStartIndex = (requestsPage - 1) * itemsPerPage;
+  const mentorsStartIndex = (mentorsPage - 1) * itemsPerPage;
+  const visibleRequests = mentorRequests.slice(requestsStartIndex, requestsStartIndex + itemsPerPage);
+  const visibleMentors = managedMentors.slice(mentorsStartIndex, mentorsStartIndex + itemsPerPage);
 
   function updateRequestStatus(requestId, status) {
     setMentorRequests((currentRequests) =>
@@ -162,11 +171,17 @@ function AdminMentorshipManagement() {
 
       return currentMentors.map((mentor) => (mentor.name === originalName ? savedMentor : mentor));
     });
+    setMentorsPage(1);
     setEditingMentor(null);
   }
 
   function deleteMentor(mentorName) {
-    setManagedMentors((currentMentors) => currentMentors.filter((mentor) => mentor.name !== mentorName));
+    setManagedMentors((currentMentors) => {
+      const nextMentors = currentMentors.filter((mentor) => mentor.name !== mentorName);
+      const nextTotalPages = Math.max(1, Math.ceil(nextMentors.length / itemsPerPage));
+      setMentorsPage((page) => Math.min(page, nextTotalPages));
+      return nextMentors;
+    });
   }
 
   function toggleMentorBlock(mentorName) {
@@ -198,7 +213,7 @@ function AdminMentorshipManagement() {
         </div>
 
         <div className="mentorship-list-scroll list-divider">
-          {mentorRequests.map((request) => (
+          {visibleRequests.map((request) => (
             <article className="mentorship-row" key={request.id}>
               <div>
                 <h3>{request.studentName}</h3>
@@ -223,6 +238,13 @@ function AdminMentorshipManagement() {
             </article>
           ))}
         </div>
+        <Pagination
+          currentPage={requestsPage}
+          totalItems={mentorRequests.length}
+          itemsPerPage={itemsPerPage}
+          itemLabel="solicitações"
+          onPageChange={setRequestsPage}
+        />
       </section>
 
       <section className="card admin-mentors-panel">
@@ -241,7 +263,7 @@ function AdminMentorshipManagement() {
         </div>
 
         <div className="list-divider">
-          {managedMentors.map((mentor) => (
+          {visibleMentors.map((mentor) => (
             <article className="admin-mentor-row" key={mentor.name}>
               <div>
                 <div className="admin-mentor-name-row">
@@ -275,6 +297,13 @@ function AdminMentorshipManagement() {
             </article>
           ))}
         </div>
+        <Pagination
+          currentPage={mentorsPage}
+          totalItems={managedMentors.length}
+          itemsPerPage={itemsPerPage}
+          itemLabel="mentores"
+          onPageChange={setMentorsPage}
+        />
       </section>
 
       {editingMentor && (

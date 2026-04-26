@@ -1,6 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
+import { getRoleLabel, initialUsers } from "../../services/userService";
 
 const groups = [
   { name: "React Avançado", members: "12 membros", status: "Ativo" },
@@ -22,14 +23,6 @@ const mentors = [
   { name: "Beatriz Lima", tags: ["JavaScript", "React", "AWS"], rating: "4.7 / 5.0" },
 ];
 
-const newUsers = [
-  ["Ana Souza", "Estudante"],
-  ["Pedro Lima", "Tutor"],
-  ["Mariana Alves", "Estudante"],
-  ["Lucas Ribeiro", "Professor"],
-  ["Sofia Mendes", "Estudante"],
-];
-
 const adminStats = [
   { label: "Tópicos em Fóruns", value: "1,320" },
   { label: "Total de Usuários", value: "8,250" },
@@ -44,6 +37,8 @@ const adminGroups = [
 ];
 
 function AdminDashboard() {
+  const navigate = useNavigate();
+
   return (
     <Layout>
       <header className="page-header">
@@ -64,15 +59,17 @@ function AdminDashboard() {
         <section className="card admin-panel">
           <div className="admin-panel-title">
             <h2>Novos Usuários</h2>
-            <Button className="btn--small">Ver Todos</Button>
+            <Button className="btn--small" onClick={() => navigate("/users?role=admin")}>
+              Ver Todos
+            </Button>
           </div>
           <div className="list-divider">
-            {newUsers.map(([name, role]) => (
-              <article className="user-row" key={name}>
+            {initialUsers.slice(0, 5).map((user) => (
+              <article className="user-row" key={user.id}>
                 <span className="avatar" />
                 <div>
-                  <p>{name}</p>
-                  <span className="role-pill">{role}</span>
+                  <p>{user.name}</p>
+                  <span className="role-pill">{getRoleLabel(user.role)}</span>
                 </div>
                 <span>Há 2 horas</span>
               </article>

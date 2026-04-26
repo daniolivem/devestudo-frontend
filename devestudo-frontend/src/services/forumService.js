@@ -86,6 +86,42 @@ export const initialForumTopics = [
     tags: ["Node.js", "JavaScript"],
     createdByCurrentMentor: false,
   },
+  {
+    title: "Como versionar banco de dados em projetos Node.js?",
+    author: "Helena Martins",
+    lastInteractionHours: 28,
+    replies: 14,
+    votes: 6,
+    tags: ["Node.js", "PostgreSQL"],
+    createdByCurrentMentor: false,
+  },
+  {
+    title: "Angular Signals: quando vale a pena usar?",
+    author: "Diego Teles",
+    lastInteractionHours: 32,
+    replies: 18,
+    votes: 8,
+    tags: ["Angular", "TypeScript"],
+    createdByCurrentMentor: false,
+  },
+  {
+    title: "Rust para backend web: por onde começar?",
+    author: "Camila Nunes",
+    lastInteractionHours: 36,
+    replies: 11,
+    votes: 5,
+    tags: ["Rust"],
+    createdByCurrentMentor: false,
+  },
+  {
+    title: "Boas práticas para deploy com Docker Compose",
+    author: "Ronaldo Lima",
+    lastInteractionHours: 40,
+    replies: 27,
+    votes: 13,
+    tags: ["Node.js"],
+    createdByCurrentMentor: false,
+  },
 ];
 
 export const forumTopicDetails = {

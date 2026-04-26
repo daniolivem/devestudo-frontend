@@ -9,6 +9,7 @@ import './styles/forum.css'
 import './styles/groups.css'
 import './styles/mentors.css'
 import './styles/profile.css'
+import './styles/users.css'
 import './styles/responsive.css'
 import App from './App.jsx'
 

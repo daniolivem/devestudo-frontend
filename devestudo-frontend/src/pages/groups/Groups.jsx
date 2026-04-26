@@ -2,11 +2,14 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
+import Pagination from "../../components/ui/Pagination";
 import AdminGroupsPanel from "../../components/groups/AdminGroupsPanel";
 import GroupCard from "../../components/groups/GroupCard";
 import GroupFormModal from "../../components/groups/GroupFormModal";
 import GroupRequestModal from "../../components/groups/GroupRequestModal";
 import { useGroups } from "../../hooks/useGroups";
+
+const itemsPerPage = 10;
 
 function GroupsFilterBar({ admin = false }) {
   return (
@@ -34,11 +37,22 @@ export default function Groups() {
   const isMentor = role === "mentor";
   const [requestedGroup, setRequestedGroup] = useState(null);
   const [editingGroup, setEditingGroup] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const { groups, saveGroup, deleteGroup } = useGroups({ isMentor });
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const visibleAdminGroups = groups.slice(startIndex, startIndex + itemsPerPage);
 
   function handleSaveGroup(groupPayload) {
     saveGroup(groupPayload, editingGroup);
+    setCurrentPage(1);
     setEditingGroup(null);
+  }
+
+  function handleDeleteGroup(groupTitle) {
+    const nextTotal = groups.length - 1;
+    const nextTotalPages = Math.max(1, Math.ceil(nextTotal / itemsPerPage));
+    deleteGroup(groupTitle);
+    setCurrentPage((page) => Math.min(page, nextTotalPages));
   }
 
   if (isAdmin) {
@@ -55,7 +69,14 @@ export default function Groups() {
         </header>
 
         <GroupsFilterBar admin />
-        <AdminGroupsPanel groups={groups} onEdit={setEditingGroup} onDelete={deleteGroup} />
+        <AdminGroupsPanel groups={visibleAdminGroups} onEdit={setEditingGroup} onDelete={handleDeleteGroup} />
+        <Pagination
+          currentPage={currentPage}
+          totalItems={groups.length}
+          itemsPerPage={itemsPerPage}
+          itemLabel="grupos"
+          onPageChange={setCurrentPage}
+        />
 
         {editingGroup && (
           <GroupFormModal

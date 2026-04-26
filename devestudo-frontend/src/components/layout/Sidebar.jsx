@@ -8,6 +8,7 @@ export default function Sidebar() {
   const query = role === "admin" || role === "mentor" ? `?role=${role}` : "";
   const links = [
     { to: `/dashboard${query}`, label: "Home" },
+    ...(role === "admin" ? [{ to: `/users${query}`, label: "Usuários" }] : []),
     { to: `/forum${query}`, label: "Fórum" },
     { to: `/groups${query}`, label: "Grupos" },
     { to: `/mentors${query}`, label: "Mentoria" },
