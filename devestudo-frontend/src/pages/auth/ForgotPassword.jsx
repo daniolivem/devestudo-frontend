@@ -1,5 +1,3 @@
-import "./ForgotPassword.css";
-
 export default function ForgotPassword() {
   return (
     <div className="auth-page">
