@@ -4,6 +4,7 @@ import Login from "../pages/auth/Login";
 import AdminLogin from "../pages/auth/AdminLogin";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Forum from "../pages/forum/Forum";
+import Topic from "../pages/forum/Topic";
 import Groups from "../pages/groups/Groups";
 import Mentors from "../pages/mentors/Mentors";
 import ForgotPassword from "../pages/auth/ForgotPassword";
@@ -18,6 +19,7 @@ export default function AppRoutes() {
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/forum" element={<Forum />} />
+        <Route path="/forum/:topicSlug" element={<Topic />} />
         <Route path="/groups" element={<Groups />} />
         <Route path="/mentors" element={<Mentors />} />
         <Route path="/profile" element={<Profile />} />

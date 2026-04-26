@@ -57,7 +57,9 @@
 
   .forum-header,
   .modal-header,
-  .modal-actions {
+  .modal-actions,
+  .reply-header,
+  .mentor-preferences-actions {
     flex-direction: column;
   }
 

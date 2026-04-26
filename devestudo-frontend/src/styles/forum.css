@@ -20,6 +20,20 @@
   align-items: start;
 }
 
+.topic-card--clickable {
+  cursor: pointer;
+}
+
+.topic-card--clickable:hover {
+  border-color: var(--line-strong);
+  background: #f1f1f1;
+}
+
+.topic-card--clickable:focus-visible {
+  outline: 2px solid #777777;
+  outline-offset: 2px;
+}
+
 .topic-title {
   margin-bottom: 12px;
   font-size: 16px;
@@ -43,4 +57,55 @@
 .topic-replies {
   text-align: center;
   min-width: 70px;
+}
+
+.topic-detail-header {
+  margin-bottom: 18px;
+}
+
+.topic-detail {
+  padding: 24px;
+}
+
+.topic-detail-tags {
+  margin-top: 18px;
+}
+
+.topic-detail-content {
+  margin-top: 22px;
+  color: #333333;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.topic-replies-section {
+  margin-top: 28px;
+}
+
+.topic-replies-section h2,
+.reply-form-card h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.reply-card {
+  padding: 18px;
+}
+
+.reply-card p {
+  color: #333333;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.reply-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.reply-form-card {
+  margin-top: 28px;
+  padding: 20px;
 }

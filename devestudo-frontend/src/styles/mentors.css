@@ -31,3 +31,50 @@
   width: 100%;
   margin-top: auto;
 }
+
+.mentor-session-summary {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.mentor-session-summary p {
+  color: #333333;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.mentor-session-details {
+  display: grid;
+  gap: 10px;
+}
+
+.mentor-session-details div {
+  display: grid;
+  gap: 4px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.mentor-session-details strong {
+  font-size: 12px;
+}
+
+.mentor-session-details span {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.mentor-preferences-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.mentor-preferences-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}

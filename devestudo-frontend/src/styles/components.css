@@ -147,6 +147,10 @@
   background: var(--panel);
 }
 
+.modal-card--small {
+  width: min(430px, 100%);
+}
+
 .modal-header {
   display: flex;
   align-items: flex-start;
@@ -170,6 +174,12 @@
   justify-content: flex-end;
   gap: 12px;
   margin-top: 8px;
+}
+
+.modal-message {
+  color: #333333;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .tag-fieldset {

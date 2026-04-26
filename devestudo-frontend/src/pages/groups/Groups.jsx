@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
@@ -64,6 +65,7 @@ const groups = [
 export default function Groups() {
   const [searchParams] = useSearchParams();
   const isAdmin = searchParams.get("role") === "admin";
+  const [requestedGroup, setRequestedGroup] = useState(null);
 
   return (
     <Layout>
@@ -107,11 +109,42 @@ export default function Groups() {
                 <Button>Excluir</Button>
               </div>
             ) : (
-              <Button className="full-button">Solicitar Entrada</Button>
+              <Button className="full-button" onClick={() => setRequestedGroup(group)}>
+                Solicitar Entrada
+              </Button>
             )}
           </article>
         ))}
       </div>
+
+      {requestedGroup && (
+        <div className="modal-backdrop" role="presentation" onClick={() => setRequestedGroup(null)}>
+          <section
+            className="card modal-card modal-card--small"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="group-request-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <div>
+                <h2 id="group-request-title">Entrada solicitada</h2>
+                <p className="page-subtitle">{requestedGroup.title}</p>
+              </div>
+            </div>
+
+            <p className="modal-message">
+              Sua solicitação foi enviada. Aguarde a aprovação de um administrador ou responsável pelo grupo.
+            </p>
+
+            <div className="modal-actions">
+              <Button className="btn--primary" onClick={() => setRequestedGroup(null)}>
+                Entendi
+              </Button>
+            </div>
+          </section>
+        </div>
+      )}
     </Layout>
   );
 }

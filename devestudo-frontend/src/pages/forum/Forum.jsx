@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
 
@@ -64,11 +64,27 @@ const topics = [
   },
 ];
 
+function createTopicSlug(title) {
+  return title
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
 export default function Forum() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const isAdmin = searchParams.get("role") === "admin";
+  const role = searchParams.get("role");
+  const isAdmin = role === "admin";
+  const roleQuery = role === "admin" || role === "mentor" ? `?role=${role}` : "";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [forumTopics, setForumTopics] = useState(topics);
+
+  function openTopic(topic) {
+    navigate(`/forum/${createTopicSlug(topic.title)}${roleQuery}`, { state: { topic } });
+  }
 
   function handleCreateThread(e) {
     e.preventDefault();
@@ -81,19 +97,19 @@ export default function Forum() {
       return;
     }
 
-    setForumTopics((currentTopics) => [
-      {
-        title,
-        content,
-        author: "Você",
-        time: "agora",
-        replies: 0,
-        tags: selectedTags,
-      },
-      ...currentTopics,
-    ]);
+    const newTopic = {
+      title,
+      content,
+      author: "Você",
+      time: "agora",
+      replies: 0,
+      tags: selectedTags,
+    };
+
+    setForumTopics((currentTopics) => [newTopic, ...currentTopics]);
     setIsModalOpen(false);
     e.currentTarget.reset();
+    openTopic(newTopic);
   }
 
   return (
@@ -120,7 +136,18 @@ export default function Forum() {
 
       <div className="stack">
         {forumTopics.map((topic) => (
-          <article className="card topic-card" key={topic.title}>
+          <article
+            className="card topic-card topic-card--clickable"
+            key={topic.title}
+            onClick={() => openTopic(topic)}
+            tabIndex="0"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openTopic(topic);
+              }
+            }}
+          >
             <div>
               <h2 className="topic-title">{topic.title}</h2>
               <p className="topic-meta">
@@ -142,7 +169,15 @@ export default function Forum() {
               )}
             </div>
             {isAdmin ? (
-              <Button className="btn--small">Moderar</Button>
+              <Button
+                className="btn--small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openTopic(topic);
+                }}
+              >
+                Moderar
+              </Button>
             ) : (
               <p className="topic-replies mini-meta">
                 {topic.replies}
