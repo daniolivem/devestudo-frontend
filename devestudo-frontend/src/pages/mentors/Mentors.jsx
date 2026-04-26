@@ -107,7 +107,8 @@ function MentorStudents() {
 
 export default function Mentors() {
   const [searchParams] = useSearchParams();
-  if (searchParams.get("role") === "admin") {
+  const role = searchParams.get("role");
+  if (role === "admin" || role === "mentor") {
     return <MentorStudents />;
   }
 

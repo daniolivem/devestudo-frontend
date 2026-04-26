@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 
@@ -19,6 +20,10 @@ export default function Register() {
             Cadastrar
           </Button>
         </form>
+
+        <div className="auth-actions auth-actions--center">
+          <Link to="/">Voltar ao login</Link>
+        </div>
       </div>
     </div>
   );

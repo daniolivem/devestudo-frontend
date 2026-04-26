@@ -56,6 +56,10 @@
   text-decoration: underline;
 }
 
+.auth-actions--center {
+  justify-content: center;
+}
+
 .admin-link {
   margin-top: 64px;
   color: #001ee8;

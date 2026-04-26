@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
 import Button from "../../components/ui/Button";
 
@@ -144,8 +144,12 @@ function AdminDashboard() {
 }
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  if (searchParams.get("role") === "admin") {
+  const role = searchParams.get("role");
+  const roleQuery = role === "mentor" ? "?role=mentor" : "";
+
+  if (role === "admin") {
     return <AdminDashboard />;
   }
 
@@ -170,7 +174,9 @@ export default function Dashboard() {
               </article>
             ))}
           </div>
-          <Button className="full-button">Ver todos os grupos</Button>
+          <Button className="full-button" onClick={() => navigate(`/groups${roleQuery}`)}>
+            Ver todos os grupos
+          </Button>
         </section>
 
         <section className="card dashboard-card">
@@ -196,7 +202,9 @@ export default function Dashboard() {
               </article>
             ))}
           </div>
-          <Button className="full-button">Ir para o Fórum</Button>
+          <Button className="full-button" onClick={() => navigate(`/forum${roleQuery}`)}>
+            Ir para o Fórum
+          </Button>
         </section>
 
         <section className="card dashboard-card">

@@ -5,7 +5,10 @@ export default function Login() {
 
   function handleLogin(e) {
     e.preventDefault();
-    navigate("/dashboard");
+    const formData = new FormData(e.currentTarget);
+    const role = formData.get("role");
+
+    navigate(role === "mentor" ? "/dashboard?role=mentor" : "/dashboard");
   }
 
   return (
@@ -25,6 +28,14 @@ export default function Login() {
             <input type="password" placeholder="••••••••" />
           </div>
 
+          <div className="input-group">
+            <label>Entrar como</label>
+            <select name="role" defaultValue="student">
+              <option value="student">Aluno</option>
+              <option value="mentor">Mentor</option>
+            </select>
+          </div>
+
           <button className="btn btn--primary" type="submit">
             Entrar
           </button>
@@ -35,7 +46,7 @@ export default function Login() {
           <Link to="/register">Criar conta</Link>
         </div>
 
-        <Link className="admin-link" to="/dashboard?role=admin">
+        <Link className="admin-link" to="/admin-login">
           Login Administrativo
         </Link>
       </div>

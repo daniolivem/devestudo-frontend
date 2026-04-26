@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function ForgotPassword() {
   return (
     <div className="auth-page">
@@ -15,6 +17,10 @@ export default function ForgotPassword() {
             Enviar
           </button>
         </form>
+
+        <div className="auth-actions auth-actions--center">
+          <Link to="/">Voltar ao login</Link>
+        </div>
       </div>
     </div>
   );
