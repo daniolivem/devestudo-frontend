@@ -1,0 +1,27 @@
+:root {
+  --primary: #2563eb;
+  --bg: #f3f4f6;
+  --text: #000104;
+  --gray: #6b7280;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  font-family: Arial, sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+.active {
+  font-weight: bold;
+  color: #2563eb;
+}
