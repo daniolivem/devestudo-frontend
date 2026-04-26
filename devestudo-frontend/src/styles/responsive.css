@@ -60,7 +60,8 @@
   }
 
   .group-actions,
-  .profile-actions {
+  .profile-actions,
+  .admin-list-row {
     grid-template-columns: 1fr;
     gap: 12px;
   }

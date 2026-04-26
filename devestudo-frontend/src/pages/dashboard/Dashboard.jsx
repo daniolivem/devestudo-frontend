@@ -30,39 +30,41 @@ const newUsers = [
   ["Sofia Mendes", "Estudante"],
 ];
 
+const adminStats = [
+  { label: "Tópicos em Fóruns", value: "1,320" },
+  { label: "Total de Usuários", value: "8,250" },
+  { label: "Grupos Ativos", value: "540" },
+];
+
+const adminGroups = [
+  { name: "React Avançado", members: "18 membros", status: "Ativo" },
+  { name: "JavaScript Fundamentals", members: "24 membros", status: "Ativo" },
+  { name: "Node.js API Development", members: "15 membros", status: "Pendente" },
+  { name: "Python para Data Science", members: "22 membros", status: "Ativo" },
+];
+
 function AdminDashboard() {
   return (
     <Layout>
+      <header className="page-header">
+        <h1 className="page-title">Dashboard Administrativo</h1>
+        <p className="page-subtitle">Acompanhe usuários, grupos e fóruns da comunidade</p>
+      </header>
+
       <div className="stats-row">
-        <article className="card stat-card">
-          <span className="stat-icon">◼</span>
-          <div>
-            <p>Tópicos em Fóruns</p>
-            <strong>1,320</strong>
-          </div>
-        </article>
-        <article className="card stat-card">
-          <span className="stat-icon">●</span>
-          <div>
-            <p>Total de Usuários</p>
-            <strong>8,250</strong>
-          </div>
-        </article>
-        <article className="card stat-card">
-          <span className="stat-icon">●</span>
-          <div>
-            <p>Grupos Ativos</p>
-            <strong>540</strong>
-          </div>
-        </article>
+        {adminStats.map((stat) => (
+          <article className="card stat-card" key={stat.label}>
+            <p>{stat.label}</p>
+            <strong>{stat.value}</strong>
+          </article>
+        ))}
       </div>
 
-      <div className="grid-2">
+      <div className="dashboard-grid admin-dashboard-grid">
         <section className="card admin-panel">
-          <h2>Usuários</h2>
           <div className="admin-panel-title">
-            <strong>Novos Usuários</strong>
-            <span>Ver Todos ›</span>
+            <h2>Novos Usuários</h2>
+            <Button className="btn--small">Ver Todos</Button>
           </div>
           <div className="list-divider">
             {newUsers.map(([name, role]) => (
@@ -86,37 +88,53 @@ function AdminDashboard() {
 
         <section className="card admin-panel">
           <div className="admin-panel-title">
-            <h2>Meus Grupos</h2>
-            <Button className="btn--small">CRIAR GRUPO</Button>
+            <h2>Grupos</h2>
+            <Button className="btn--small">Criar Grupo</Button>
           </div>
-          <h3>MEMBROS</h3>
-          <div className="mock-table">
-            {[1, 2, 3, 4, 5].map((item) => (
-              <div className="mock-row" key={item}>
-                <span className="avatar avatar--small" />
-                <span />
-                <span />
+          <div className="list-divider">
+            {adminGroups.map((group) => (
+              <article className="admin-list-row" key={group.name}>
                 <div>
-                  <Button className="btn--small">BLOQUEAR</Button>
-                  <Button className="btn--small">REMOVER MEMBRO</Button>
+                  <p className="mini-title">{group.name}</p>
+                  <p className="mini-meta">{group.members}</p>
                 </div>
-              </div>
+                <span className="status-badge">{group.status}</span>
+                <div className="admin-actions">
+                  <Button className="btn--small">Editar</Button>
+                  <Button className="btn--small">Excluir</Button>
+                </div>
+              </article>
             ))}
           </div>
-          <div className="admin-panel-title" style={{ marginTop: 24 }}>
-            <h3>FÓRUNS</h3>
-            <Button className="btn--small">ADICIONAR FÓRUM</Button>
+        </section>
+
+        <section className="card admin-panel">
+          <div className="admin-panel-title">
+            <h2>Fóruns</h2>
+            <Button className="btn--small">Adicionar Fórum</Button>
           </div>
-          <div className="mock-table">
-            {[1, 2].map((item) => (
-              <div className="mock-row mock-row--forum" key={item}>
-                <span />
-                <strong>0</strong>
+          <div className="list-divider">
+            {topics.slice(0, 4).map((topic) => (
+              <article className="admin-list-row" key={topic.title}>
                 <div>
-                  <Button className="btn--small">ADICIONAR</Button>
-                  <Button className="btn--small">EXCLUIR FÓRUM</Button>
+                  <p className="mini-title">{topic.title}</p>
+                  <div className="chip-list" style={{ marginTop: 10 }}>
+                    {topic.tags.map((tag) => (
+                      <span className="chip" key={tag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+                <p className="mini-meta">
+                  {topic.replies}
+                  <br />
+                  respostas
+                </p>
+                <div className="admin-actions">
+                  <Button className="btn--small">Moderar</Button>
+                </div>
+              </article>
             ))}
           </div>
         </section>

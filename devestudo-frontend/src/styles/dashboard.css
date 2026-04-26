@@ -62,52 +62,43 @@
 .stats-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  margin: 4px 0 2px;
+  gap: 22px;
+  margin-bottom: 22px;
 }
 
 .stat-card {
-  min-height: 56px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px;
-}
-
-.stat-icon {
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--black);
-  color: var(--white);
-  font-size: 10px;
+  min-height: 110px;
+  padding: 18px;
 }
 
 .stat-card p {
   font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 10px;
 }
 
 .stat-card strong {
   display: block;
-  font-size: 20px;
+  font-size: 28px;
   line-height: 1;
 }
 
+.admin-dashboard-grid {
+  margin-top: 0;
+}
+
 .admin-panel {
-  min-height: 580px;
+  min-height: 540px;
   padding: 18px;
 }
 
 .admin-panel h2 {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .admin-panel h3 {
-  font-size: 18px;
-  font-weight: 500;
-  margin: 18px 0 10px;
+  font-size: 16px;
+  margin-bottom: 12px;
 }
 
 .admin-panel-title {
@@ -118,13 +109,21 @@
   margin-bottom: 12px;
 }
 
-.user-row {
+.user-row,
+.admin-list-row {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) auto;
-  gap: 10px;
+  gap: 14px;
   align-items: center;
-  padding: 8px 0;
+  padding: 14px 0;
   font-size: 14px;
+}
+
+.user-row {
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+}
+
+.admin-list-row {
+  grid-template-columns: minmax(0, 1fr) auto auto;
 }
 
 .avatar {
@@ -133,12 +132,6 @@
   border-radius: 50%;
   border: 1px solid #9f9f9f;
   background: linear-gradient(#d8d8d8, #bdbdbd);
-}
-
-.avatar--small {
-  width: 28px;
-  height: 28px;
-  border: none;
 }
 
 .role-pill {
@@ -152,8 +145,8 @@
 }
 
 .admin-stats {
-  margin-top: 16px;
-  padding: 12px;
+  margin-top: 22px;
+  padding: 16px;
 }
 
 .admin-stats h3 {
@@ -166,40 +159,10 @@
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
-  border-top: 1px solid var(--line-strong);
+  border-top: 1px solid var(--line);
 }
 
-.mock-table {
-  border: 1px solid #111111;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.mock-row {
-  min-height: 50px;
+.admin-actions {
   display: grid;
-  grid-template-columns: 28px 1fr 0.7fr auto;
-  gap: 10px;
-  align-items: center;
-  padding: 8px;
-  border-top: 1px solid #111111;
-}
-
-.mock-row:first-child {
-  border-top: 0;
-}
-
-.mock-row > span:not(.avatar) {
-  height: 13px;
-  border-radius: 8px;
-  background: #cccccc;
-}
-
-.mock-row > div {
-  display: grid;
-  gap: 4px;
-}
-
-.mock-row--forum {
-  grid-template-columns: 1fr 40px auto;
+  gap: 8px;
 }
