@@ -130,6 +130,7 @@
   .admin-group-row,
   .admin-mentor-row,
   .profile-actions,
+  .admin-summary-row,
   .admin-list-row {
     grid-template-columns: 1fr;
     gap: 12px;

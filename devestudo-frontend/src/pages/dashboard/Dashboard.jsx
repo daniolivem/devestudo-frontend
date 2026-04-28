@@ -86,20 +86,18 @@ function AdminDashboard() {
         <section className="card admin-panel">
           <div className="admin-panel-title">
             <h2>Grupos</h2>
-            <Button className="btn--small">Criar Grupo</Button>
+            <Button className="btn--small" onClick={() => navigate("/groups?role=admin")}>
+              Ver Todos
+            </Button>
           </div>
           <div className="list-divider">
             {adminGroups.map((group) => (
-              <article className="admin-list-row" key={group.name}>
+              <article className="admin-summary-row" key={group.name}>
                 <div>
                   <p className="mini-title">{group.name}</p>
                   <p className="mini-meta">{group.members}</p>
                 </div>
                 <span className="status-badge">{group.status}</span>
-                <div className="admin-actions">
-                  <Button className="btn--small">Editar</Button>
-                  <Button className="btn--small">Excluir</Button>
-                </div>
               </article>
             ))}
           </div>
@@ -108,11 +106,13 @@ function AdminDashboard() {
         <section className="card admin-panel">
           <div className="admin-panel-title">
             <h2>Fóruns</h2>
-            <Button className="btn--small">Adicionar Fórum</Button>
+            <Button className="btn--small" onClick={() => navigate("/forum?role=admin")}>
+              Ver Todos
+            </Button>
           </div>
           <div className="list-divider">
             {topics.slice(0, 4).map((topic) => (
-              <article className="admin-list-row" key={topic.title}>
+              <article className="admin-summary-row" key={topic.title}>
                 <div>
                   <p className="mini-title">{topic.title}</p>
                   <div className="chip-list" style={{ marginTop: 10 }}>
@@ -128,9 +128,6 @@ function AdminDashboard() {
                   <br />
                   respostas
                 </p>
-                <div className="admin-actions">
-                  <Button className="btn--small">Moderar</Button>
-                </div>
               </article>
             ))}
           </div>

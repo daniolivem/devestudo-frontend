@@ -115,7 +115,8 @@
 }
 
 .user-row,
-.admin-list-row {
+.admin-list-row,
+.admin-summary-row {
   display: grid;
   gap: 14px;
   align-items: center;
@@ -129,6 +130,10 @@
 
 .admin-list-row {
   grid-template-columns: minmax(0, 1fr) auto auto;
+}
+
+.admin-summary-row {
+  grid-template-columns: minmax(0, 1fr) auto;
 }
 
 .avatar {
